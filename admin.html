@@ -29,8 +29,8 @@
     }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #050505;
+      font-family: 'Courier New', monospace;
+      background-color: #1a1a1a;
       color: #ffffff;
       min-height: 100vh;
       overflow-x: hidden;
@@ -43,7 +43,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(5, 5, 5, 0.95);
+      background: rgba(10, 10, 10, 0.98);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -56,13 +56,30 @@
     }
 
     .auth-container {
-      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-      border: 2px solid #007bff;
-      border-radius: 12px;
+      background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+      border: 3px solid #FFC300;
+      border-radius: 0;
       padding: 2rem;
       text-align: center;
       max-width: 400px;
       animation: slideUp 0.5s ease-in-out;
+      box-shadow: 0 0 30px rgba(220, 20, 60, 0.7), 0 0 0 2px #DC143C;
+      position: relative;
+    }
+
+    .auth-container::before {
+      content: '⚠️ RESTRICTED AREA ⚠️';
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #DC143C;
+      color: #FFC300;
+      padding: 0.3rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      border: 2px solid #FFC300;
     }
 
     @keyframes slideUp {
@@ -78,68 +95,82 @@
 
     .auth-container h1 {
       font-size: 1.75rem;
-      color: #00ff41;
-      text-shadow: 0 0 10px #00ff41;
+      color: #FFC300;
+      text-shadow: 0 0 15px #FFC300, 2px 2px 4px #000000;
       margin-bottom: 1rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 2px;
     }
 
     .auth-container p {
       font-size: 0.875rem;
-      color: #cccccc;
+      color: #ffffff;
       margin-bottom: 1.5rem;
+      font-weight: 700;
+      text-transform: uppercase;
     }
 
     .badge-input {
       width: 100%;
       padding: 1rem;
-      background-color: #1a1a1a;
-      color: #00ff41;
-      border: 2px solid #007bff;
-      border-radius: 8px;
+      background-color: #2a2a2a;
+      color: #ffffff;
+      border: 3px solid #FFC300;
+      border-radius: 0;
       font-size: 1rem;
       font-family: 'Courier New', monospace;
       margin-bottom: 1rem;
       transition: all 0.3s ease;
+      text-align: center;
+      font-weight: 900;
+      letter-spacing: 3px;
     }
 
     .badge-input:focus {
       outline: none;
-      border-color: #00ff41;
-      box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+      border-color: #DC143C;
+      box-shadow: 0 0 20px rgba(220, 20, 60, 0.6);
     }
 
     .auth-button {
       width: 100%;
       padding: 1rem;
-      background-color: #007bff;
-      color: #ffffff;
-      border: none;
-      border-radius: 8px;
+      background: #FFC300;
+      color: #000000;
+      border: 3px solid #DC143C;
+      border-radius: 0;
       font-size: 1rem;
-      font-weight: 600;
+      font-weight: 900;
       cursor: pointer;
       transition: all 0.3s ease;
       min-height: 60px;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 2px;
+      box-shadow: 0 4px 0 #8B0000;
     }
 
     .auth-button:hover {
-      background-color: #00ff41;
-      color: #050505;
-      box-shadow: 0 0 15px rgba(0, 255, 65, 0.5);
+      background: #DC143C;
+      color: #FFC300;
+      box-shadow: 0 0 20px rgba(255, 195, 0, 0.8), 0 4px 0 #FFC300;
+      transform: translateY(-2px);
     }
 
     .auth-button:disabled {
-      background-color: #555555;
+      background-color: #666666;
+      color: #cccccc;
       cursor: not-allowed;
       opacity: 0.6;
     }
 
     .auth-error {
-      color: #ff4444;
+      color: #DC143C;
       font-size: 0.875rem;
       margin-top: 1rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px #DC143C;
     }
 
     /* ===== MAIN DASHBOARD ===== */
@@ -170,38 +201,68 @@
       grid-column: 1 / -1;
       text-align: center;
       margin-bottom: 1rem;
+      padding: 1.5rem;
+      background: #000000;
+      border: 3px solid #FFC300;
+      position: relative;
+      box-shadow: 0 0 20px rgba(220, 20, 60, 0.5);
+    }
+
+    .dashboard-header::before {
+      content: '⚠️ EVIDENCE CONTROL CENTER ⚠️';
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #DC143C;
+      color: #FFC300;
+      padding: 0.3rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      border: 2px solid #FFC300;
     }
 
     .dashboard-header h1 {
       font-size: 2rem;
-      color: #00ff41;
-      text-shadow: 0 0 10px #00ff41;
+      color: #FFC300;
+      text-shadow: 0 0 15px #FFC300, 2px 2px 4px #000000;
       margin-bottom: 0.5rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
     }
 
     .dashboard-header p {
-      color: #007bff;
-      text-shadow: 0 0 5px #007bff;
+      color: #DC143C;
+      text-shadow: 0 0 10px #DC143C;
+      font-weight: 700;
+      text-transform: uppercase;
     }
 
     /* ===== ANALYTICS PANEL (Chart.js) ===== */
     .analytics-panel {
-      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-      border: 2px solid #007bff;
-      border-radius: 12px;
+      background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+      border: 3px solid #FFC300;
+      border-radius: 0;
       padding: 1.5rem;
       transition: all 0.3s ease;
+      box-shadow: 0 0 20px rgba(220, 20, 60, 0.3);
     }
 
     .analytics-panel:hover {
-      box-shadow: 0 0 20px rgba(0, 123, 255, 0.3);
+      box-shadow: 0 0 30px rgba(255, 195, 0, 0.5);
     }
 
     .analytics-panel h2 {
       font-size: 1.5rem;
-      color: #00ff41;
+      color: #FFC300;
       margin-bottom: 1.5rem;
       text-align: center;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px #FFC300;
     }
 
     .chart-container {
@@ -218,23 +279,28 @@
 
     /* ===== FEEDBACK STREAM PANEL ===== */
     .feedback-panel {
-      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-      border: 2px solid #007bff;
-      border-radius: 12px;
+      background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+      border: 3px solid #FFC300;
+      border-radius: 0;
       padding: 1.5rem;
       display: flex;
       flex-direction: column;
       transition: all 0.3s ease;
+      box-shadow: 0 0 20px rgba(220, 20, 60, 0.3);
     }
 
     .feedback-panel:hover {
-      box-shadow: 0 0 20px rgba(0, 123, 255, 0.3);
+      box-shadow: 0 0 30px rgba(255, 195, 0, 0.5);
     }
 
     .feedback-panel h2 {
       font-size: 1.5rem;
-      color: #00ff41;
+      color: #FFC300;
       margin-bottom: 1.5rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px #FFC300;
     }
 
     .feedback-stream {
@@ -250,26 +316,29 @@
 
     .feedback-stream::-webkit-scrollbar-track {
       background: #1a1a1a;
-      border-radius: 4px;
+      border-radius: 0;
     }
 
     .feedback-stream::-webkit-scrollbar-thumb {
-      background: #007bff;
-      border-radius: 4px;
+      background: #FFC300;
+      border-radius: 0;
+      border: 1px solid #DC143C;
     }
 
     .feedback-stream::-webkit-scrollbar-thumb:hover {
-      background: #00ff41;
+      background: #DC143C;
     }
 
     .feedback-item {
-      background-color: #050505;
-      border-left: 4px solid #00ff41;
+      background-color: #2a2a2a;
+      border-left: 5px solid #FFC300;
+      border: 3px solid #FFC300;
       padding: 1rem;
       margin-bottom: 1rem;
-      border-radius: 4px;
+      border-radius: 0;
       animation: slideIn 0.4s ease-in-out;
       font-size: 0.875rem;
+      box-shadow: 0 0 10px rgba(220, 20, 60, 0.3);
     }
 
     @keyframes slideIn {
@@ -284,20 +353,23 @@
     }
 
     .feedback-option {
-      color: #007bff;
-      font-weight: 600;
+      color: #FFC300;
+      font-weight: 900;
       margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .feedback-text {
-      color: #cccccc;
+      color: #ffffff;
       word-wrap: break-word;
     }
 
     .feedback-time {
-      color: #999999;
+      color: #FFC300;
       font-size: 0.75rem;
       margin-top: 0.5rem;
+      font-weight: 700;
     }
 
     /* ===== EMPTY STATE ===== */
@@ -311,49 +383,55 @@
     /* ===== CONTROL PANEL ===== */
     .control-panel {
       grid-column: 1 / -1;
-      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-      border: 2px solid #007bff;
-      border-radius: 12px;
+      background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+      border: 3px solid #FFC300;
+      border-radius: 0;
       padding: 1.5rem;
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
       justify-content: center;
       align-items: center;
+      box-shadow: 0 0 20px rgba(220, 20, 60, 0.3);
     }
 
     .control-button {
       padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 8px;
+      border: 3px solid #FFC300;
+      border-radius: 0;
       font-size: 0.875rem;
-      font-weight: 600;
+      font-weight: 900;
       cursor: pointer;
       transition: all 0.3s ease;
       min-height: 50px;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 2px;
+      box-shadow: 0 4px 0 #8B0000;
     }
 
     .refresh-button {
-      background-color: #007bff;
-      color: #ffffff;
+      background: #FFC300;
+      color: #000000;
     }
 
     .refresh-button:hover {
-      background-color: #00ff41;
-      color: #050505;
-      box-shadow: 0 0 15px rgba(0, 255, 65, 0.5);
+      background: #DC143C;
+      color: #FFC300;
+      box-shadow: 0 0 20px rgba(255, 195, 0, 0.8), 0 4px 0 #FFC300;
+      transform: translateY(-2px);
     }
 
     .reset-button {
-      background-color: #ff4444;
-      color: #ffffff;
+      background-color: #DC143C;
+      color: #FFC300;
+      border-color: #DC143C;
     }
 
     .reset-button:hover {
-      background-color: #ff0000;
-      box-shadow: 0 0 15px rgba(255, 68, 68, 0.5);
+      background-color: #8B0000;
+      border-color: #FFC300;
+      box-shadow: 0 0 20px rgba(220, 20, 60, 0.8), 0 4px 0 #FFC300;
+      transform: translateY(-2px);
     }
 
     .control-button:disabled {
@@ -364,19 +442,23 @@
     /* ===== STATUS INDICATOR ===== */
     .status {
       font-size: 0.75rem;
-      color: #00ff41;
+      color: #FFC300;
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .status-dot {
       display: inline-block;
       width: 8px;
       height: 8px;
-      background-color: #00ff41;
+      background-color: #DC143C;
       border-radius: 50%;
       animation: pulse 1s infinite;
+      box-shadow: 0 0 10px #DC143C;
     }
 
     @keyframes pulse {
@@ -393,23 +475,27 @@
     }
 
     .stat-card {
-      background-color: #050505;
-      border: 1px solid #007bff;
-      border-radius: 8px;
+      background-color: #2a2a2a;
+      border: 3px solid #FFC300;
+      border-radius: 0;
       padding: 1rem;
       text-align: center;
+      box-shadow: 0 0 10px rgba(220, 20, 60, 0.3);
     }
 
     .stat-value {
       font-size: 2rem;
-      color: #00ff41;
-      font-weight: 600;
+      color: #FFC300;
+      font-weight: 900;
+      text-shadow: 0 0 10px #FFC300;
     }
 
     .stat-label {
       font-size: 0.75rem;
-      color: #999999;
+      color: #ffffff;
       margin-top: 0.5rem;
+      font-weight: 700;
+      text-transform: uppercase;
     }
   </style>
 </head>
@@ -417,16 +503,16 @@
   <!-- Authentication Overlay (Phase 2 - Primary Security) -->
   <div id="authOverlay" class="auth-overlay">
     <div class="auth-container">
-      <h1>🔐 Access Restricted</h1>
-      <p>Enter your Badge ID to access the Admin HUD</p>
+      <h1>� RESTRICTED ACCESS 🚨</h1>
+      <p>⚠️ Enter Security Clearance Code ⚠️</p>
       <input 
         id="badgeInput" 
         type="password" 
         class="badge-input" 
-        placeholder="Badge ID" 
+        placeholder="● ● ● ●" 
         onkeypress="handleBadgeKeypress(event)"
       >
-      <button class="auth-button" onclick="authenticateBadge()">Authenticate</button>
+      <button class="auth-button" onclick="authenticateBadge()">🔓 AUTHENTICATE</button>
       <div id="authError" class="auth-error"></div>
     </div>
   </div>
@@ -435,13 +521,13 @@
   <div id="dashboard" class="dashboard" style="display: none;">
     <!-- Dashboard Header -->
     <div class="dashboard-header">
-      <h1>📊 Admin HUD - Real-Time Analytics</h1>
-      <p><span class="status"><span class="status-dot"></span>Live Feed Active</span></p>
+      <h1>� CRIME SCENE COMMAND CENTER 🚨</h1>
+      <p><span class="status"><span class="status-dot"></span>⚠️ LIVE SURVEILLANCE ACTIVE ⚠️</span></p>
     </div>
 
     <!-- Analytics Panel with Chart.js -->
     <div class="analytics-panel">
-      <h2>Vote Distribution</h2>
+      <h2>📊 SUSPECT ACCUSATION ANALYSIS</h2>
       <div class="stats-row" id="statsRow"></div>
       <div class="chart-container">
         <canvas id="voteChart"></canvas>
@@ -450,19 +536,19 @@
 
     <!-- Feedback Stream Panel -->
     <div class="feedback-panel">
-      <h2>Live Feedback Stream</h2>
+      <h2>📝 WITNESS STATEMENTS LOG</h2>
       <div id="feedbackStream" class="feedback-stream">
-        <div class="empty-state">Waiting for feedback...</div>
+        <div class="empty-state">⚠️ AWAITING EVIDENCE SUBMISSIONS ⚠️</div>
       </div>
     </div>
 
     <!-- Control Panel -->
     <div class="control-panel">
       <button class="control-button refresh-button" onclick="refreshData()">
-        🔄 Refresh Data
+        🔄 REFRESH DATABASE
       </button>
       <button class="control-button reset-button" onclick="triggerSystemReset()">
-        ⚠️ System Reset
+        🚨 EVIDENCE PURGE 🚨
       </button>
     </div>
   </div>
@@ -477,13 +563,13 @@
     // Initialize Firebase with your project credentials
     // Replace these values with your Firebase project configuration (same as index.html)
     const firebaseConfig = {
-      apiKey: "AIzaSyBQsEq1H8OEh5e5z3m0pK9qL3mN7qR5sT9",
-      authDomain: "online-voting-abc123.firebaseapp.com",
-      databaseURL: "https://online-voting-abc123-default-rtdb.firebaseio.com",
-      projectId: "online-voting-abc123",
-      storageBucket: "online-voting-abc123.appspot.com",
-      messagingSenderId: "123456789012",
-      appId: "1:123456789012:web:abcdef123456789"
+      apiKey: "AIzaSyC1bxz29svF9y_5V-8VJz0NaMsIzVOAwhI",
+      authDomain: "online-voting-b970f.firebaseapp.com",
+      databaseURL: "https://online-voting-b970f-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "online-voting-b970f",
+      storageBucket: "online-voting-b970f.firebasestorage.app",
+      messagingSenderId: "784746686625",
+      appId: "1:784746686625:web:eb6a565d11d7240d48a8e0"
     };
 
     // Initialize Firebase
@@ -499,10 +585,10 @@
 
     /* ===== SUSPECT OPTIONS (Must match index.html) ===== */
     const suspectOptions = [
-      { id: 'suspect1', name: 'Alex Sterling' },
-      { id: 'suspect2', name: 'Jordan Blake' },
-      { id: 'suspect3', name: 'Morgan Chase' },
-      { id: 'suspect4', name: 'Casey Turner' }
+      { id: 'suspect1', name: 'Lydia Mercer' },
+      { id: 'suspect2', name: 'Marco Vale' },
+      { id: 'suspect3', name: 'Noah Kade' },
+      { id: 'suspect4', name: 'Theo Ash' }
     ];
 
     /* ===== AUTHENTICATION LOGIC ===== */
@@ -551,12 +637,12 @@
           datasets: [{
             label: 'Accusations',
             data: suspectOptions.map(() => 0),
-            backgroundColor: 'rgba(0, 255, 65, 0.7)',
-            borderColor: 'rgba(0, 255, 65, 1)',
-            borderWidth: 2,
-            borderRadius: 8,
-            hoverBackgroundColor: 'rgba(0, 123, 255, 0.7)',
-            hoverBorderColor: 'rgba(0, 123, 255, 1)',
+            backgroundColor: 'rgba(255, 195, 0, 0.8)',
+            borderColor: 'rgba(220, 20, 60, 1)',
+            borderWidth: 3,
+            borderRadius: 0,
+            hoverBackgroundColor: 'rgba(220, 20, 60, 0.8)',
+            hoverBorderColor: 'rgba(255, 195, 0, 1)',
           }]
         },
         options: {
@@ -571,17 +657,23 @@
             y: {
               beginAtZero: true,
               ticks: {
-                color: '#cccccc'
+                color: '#FFC300',
+                font: {
+                  family: "'Courier New', monospace",
+                  weight: 'bold'
+                }
               },
               grid: {
-                color: 'rgba(255, 255, 255, 0.1)'
+                color: 'rgba(255, 195, 0, 0.1)'
               }
             },
             x: {
               ticks: {
-                color: '#cccccc',
+                color: '#FFC300',
                 font: {
-                  size: 10
+                  size: 10,
+                  family: "'Courier New', monospace",
+                  weight: 'bold'
                 }
               },
               grid: {
@@ -654,8 +746,8 @@
         const feedbackItem = document.createElement('div');
         feedbackItem.className = 'feedback-item';
         feedbackItem.innerHTML = `
-          <div class="feedback-option">🗳️ ${feedback.option}</div>
-          <div class="feedback-text">"${feedback.feedback}"</div>
+          <div class="feedback-option">� SUSPECT: ${feedback.option}</div>
+          <div class="feedback-text">📝 EVIDENCE: "${feedback.feedback}"</div>
           <div class="feedback-time">${timeStr}</div>
         `;
 

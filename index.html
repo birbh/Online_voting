@@ -28,8 +28,8 @@
     }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #050505;
+      font-family: 'Courier New', monospace;
+      background-color: #1a1a1a;
       color: #ffffff;
       min-height: 100vh;
       display: flex;
@@ -60,19 +60,44 @@
     .header {
       text-align: center;
       margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: #000000;
+      border: 3px solid #FFC300;
+      position: relative;
+      box-shadow: 0 0 20px rgba(220, 20, 60, 0.5);
+    }
+
+    .header::before {
+      content: '⚠️ CRIME SCENE - DO NOT CROSS ⚠️';
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #DC143C;
+      color: #FFC300;
+      padding: 0.3rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      border: 2px solid #FFC300;
     }
 
     .header h1 {
       font-size: 1.75rem;
-      color: #00ff41;
-      text-shadow: 0 0 10px #00ff41;
+      color: #FFC300;
+      text-shadow: 0 0 15px #FFC300, 2px 2px 4px #000000;
       margin-bottom: 0.5rem;
+      font-weight: 900;
+      letter-spacing: 2px;
     }
 
     .header p {
       font-size: 0.875rem;
-      color: #007bff;
-      text-shadow: 0 0 5px #007bff;
+      color: #DC143C;
+      text-shadow: 0 0 10px #DC143C, 1px 1px 2px #000000;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     /* ===== VOTING GRID (Phase 1 Main Content) ===== */
@@ -109,41 +134,69 @@
 
     /* ===== VOTING CARD (Suspect Card with Photo) ===== */
     .voting-card {
-      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-      border: 3px solid #007bff;
-      border-radius: 12px;
+      background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+      border: 3px solid #FFC300;
+      border-radius: 0;
       overflow: hidden;
       cursor: pointer;
       transition: all 0.3s ease;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8), 0 0 0 2px #DC143C;
+      position: relative;
+    }
+
+    .voting-card::before {
+      content: '⚠️';
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 1.5rem;
+      z-index: 10;
+      filter: drop-shadow(0 0 5px #FFC300);
     }
 
     .voting-card:hover {
-      border-color: #00ff41;
-      box-shadow: 0 0 25px rgba(0, 255, 65, 0.4);
+      border-color: #DC143C;
+      box-shadow: 0 8px 25px rgba(220, 20, 60, 0.6), 0 0 0 3px #FFC300;
       transform: translateY(-8px);
     }
 
     /* ===== SUSPECT PHOTO SECTION ===== */
     .suspect-photo {
       width: 100%;
-      height: 250px;
-      background: linear-gradient(135deg, #007bff, #0056cc);
+      height: auto;
+      background: linear-gradient(135deg, #DC143C, #8B0000);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 3rem;
-      color: rgba(255, 255, 255, 0.3);
+      color: rgba(255, 195, 0, 0.3);
       overflow: hidden;
-      border-bottom: 2px solid #00ff41;
+      border-bottom: 3px solid #FFC300;
+      position: relative;
+    }
+
+    .suspect-photo::after {
+      content: 'EVIDENCE';
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: #000000;
+      color: #FFC300;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      border: 2px solid #FFC300;
     }
 
     .suspect-photo img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      filter: grayscale(30%) contrast(1.2);
     }
 
     /* ===== SUSPECT INFO SECTION ===== */
@@ -153,31 +206,36 @@
       flex-direction: column;
       justify-content: space-between;
       flex-grow: 1;
+      background: #1a1a1a;
     }
 
     .voting-card h3 {
       font-size: 1.5rem;
       margin-bottom: 0.5rem;
-      color: #00ff41;
-      text-shadow: 0 0 8px rgba(0, 255, 65, 0.3);
+      color: #FFC300;
+      text-shadow: 0 0 10px rgba(255, 195, 0, 0.5), 2px 2px 4px #000000;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .voting-card p {
       font-size: 0.875rem;
-      color: #cccccc;
+      color: #ffffff;
       margin-bottom: 1.5rem;
       line-height: 1.4;
+      text-shadow: 1px 1px 2px #000000;
     }
 
     /* ===== ACTION BUTTON (Min-height 60px for mobile accessibility) ===== */
     .vote-button {
-      background-color: #007bff;
-      color: #ffffff;
-      border: none;
+      background: #FFC300;
+      color: #000000;
+      border: 3px solid #DC143C;
       padding: 1rem 1.5rem;
-      border-radius: 8px;
+      border-radius: 0;
       font-size: 1rem;
-      font-weight: 600;
+      font-weight: 900;
       cursor: pointer;
       transition: all 0.3s ease;
       min-height: 60px;
@@ -185,24 +243,30 @@
       align-items: center;
       justify-content: center;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 2px;
+      box-shadow: 0 4px 0 #8B0000, 0 5px 10px rgba(0, 0, 0, 0.5);
+      position: relative;
     }
 
     .vote-button:hover {
-      background-color: #00ff41;
-      color: #050505;
-      box-shadow: 0 0 15px rgba(0, 255, 65, 0.5);
-      transform: scale(1.05);
+      background: #DC143C;
+      color: #FFC300;
+      border-color: #FFC300;
+      box-shadow: 0 0 20px rgba(255, 195, 0, 0.8), 0 4px 0 #FFC300;
+      transform: translateY(-2px);
     }
 
     .vote-button:active {
-      transform: scale(0.98);
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #8B0000;
     }
 
     .vote-button:disabled {
-      background-color: #555555;
+      background-color: #666666;
+      color: #cccccc;
       cursor: not-allowed;
       opacity: 0.6;
+      border-color: #666666;
     }
 
     /* ===== FEEDBACK SECTION (State Transition) ===== */
@@ -212,6 +276,11 @@
       transition: opacity 0.6s ease-in-out;
       text-align: center;
       animation: slideIn 0.6s ease-in-out;
+      padding: 2rem;
+      background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+      border: 3px solid #FFC300;
+      border-radius: 0;
+      box-shadow: 0 0 20px rgba(220, 20, 60, 0.5);
     }
 
     .feedback-section.show {
@@ -230,15 +299,20 @@
 
     .feedback-section h2 {
       font-size: 1.5rem;
-      color: #00ff41;
+      color: #FFC300;
       margin-bottom: 1rem;
-      text-shadow: 0 0 10px #00ff41;
+      text-shadow: 0 0 15px #FFC300, 2px 2px 4px #000000;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 2px;
     }
 
     .feedback-section p {
       font-size: 0.875rem;
-      color: #cccccc;
+      color: #ffffff;
       margin-bottom: 1.5rem;
+      font-weight: 700;
+      text-transform: uppercase;
     }
 
     .feedback-textarea {
@@ -246,21 +320,22 @@
       max-width: 600px;
       min-height: 150px;
       padding: 1rem;
-      background-color: #1a1a1a;
-      color: #00ff41;
-      border: 2px solid #007bff;
-      border-radius: 8px;
+      background-color: #2a2a2a;
+      color: #ffffff;
+      border: 3px solid #FFC300;
+      border-radius: 0;
       font-family: 'Courier New', monospace;
       font-size: 0.875rem;
       resize: vertical;
       margin-bottom: 1.5rem;
       transition: all 0.3s ease;
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
     }
 
     .feedback-textarea:focus {
       outline: none;
-      border-color: #00ff41;
-      box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+      border-color: #DC143C;
+      box-shadow: 0 0 20px rgba(220, 20, 60, 0.5), inset 0 0 10px rgba(0, 0, 0, 0.8);
     }
 
     .feedback-button-group {
@@ -280,61 +355,75 @@
 
     .submit-button, .reset-button {
       padding: 1rem 2rem;
-      border: none;
-      border-radius: 8px;
+      border: 3px solid #FFC300;
+      border-radius: 0;
       font-size: 1rem;
-      font-weight: 600;
+      font-weight: 900;
       cursor: pointer;
       transition: all 0.3s ease;
       min-height: 60px;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 2px;
       flex: 1;
+      box-shadow: 0 4px 0 #8B0000;
     }
 
     .submit-button {
-      background-color: #00ff41;
-      color: #050505;
+      background: #FFC300;
+      color: #000000;
     }
 
     .submit-button:hover {
-      box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
-      transform: scale(1.05);
+      background: #DC143C;
+      color: #FFC300;
+      box-shadow: 0 0 20px rgba(255, 195, 0, 0.8), 0 4px 0 #FFC300;
+      transform: translateY(-2px);
     }
 
     .reset-button {
-      background-color: #007bff;
-      color: #ffffff;
+      background-color: #1a1a1a;
+      color: #FFC300;
+      border-color: #DC143C;
     }
 
     .reset-button:hover {
-      box-shadow: 0 0 20px rgba(0, 123, 255, 0.5);
-      transform: scale(1.05);
+      background-color: #DC143C;
+      color: #FFC300;
+      border-color: #FFC300;
+      box-shadow: 0 0 20px rgba(220, 20, 60, 0.8), 0 4px 0 #FFC300;
+      transform: translateY(-2px);
     }
 
     /* ===== CONFIRMATION MESSAGE ===== */
     .confirmation {
       background-color: #1a1a1a;
-      border: 2px solid #00ff41;
-      border-radius: 8px;
+      border: 3px solid #FFC300;
+      border-radius: 0;
       padding: 1.5rem;
       margin-top: 1.5rem;
       text-align: center;
-      color: #00ff41;
-      font-weight: 600;
+      color: #FFC300;
+      font-weight: 900;
       animation: slideIn 0.4s ease-in-out;
+      box-shadow: 0 0 15px rgba(255, 195, 0, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     /* ===== ERROR MESSAGE ===== */
     .error-message {
       background-color: #1a0000;
-      border: 2px solid #ff4444;
-      border-radius: 8px;
+      border: 3px solid #DC143C;
+      border-radius: 0;
       padding: 1rem;
-      color: #ff4444;
+      color: #DC143C;
       text-align: center;
       margin-bottom: 1.5rem;
       animation: slideIn 0.4s ease-in-out;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 0 15px rgba(220, 20, 60, 0.5);
     }
 
     /* ===== LOADING STATE ===== */
@@ -342,9 +431,10 @@
       display: inline-block;
       width: 12px;
       height: 12px;
-      background-color: #00ff41;
+      background-color: #FFC300;
       border-radius: 50%;
       animation: pulse 1s infinite;
+      box-shadow: 0 0 10px #FFC300;
     }
 
     @keyframes pulse {
@@ -357,8 +447,8 @@
   <div class="container">
     <!-- Header Section -->
     <div class="header">
-      <h1>🔍 Digital Investigator</h1>
-      <p>Who is the Culprit? Cast Your Accusation</p>
+      <h1>� CRIME SCENE INVESTIGATION 🚨</h1>
+      <p>⚠️ Who is the Culprit? Cast Your Accusation ⚠️</p>
     </div>
 
     <!-- Voting Section (Phase 1 - Primary) -->
@@ -371,12 +461,12 @@
 
     <!-- Feedback Section (Phase 1 - State Transition) -->
     <div id="feedbackSection" class="feedback-section">
-      <h2>✓ Your Vote Recorded</h2>
-      <p>Share your investigative insight:</p>
-      <textarea id="feedbackTextarea" class="feedback-textarea" placeholder="Enter your theory or feedback..."></textarea>
+      <h2>⚠️ ACCUSATION RECORDED ⚠️</h2>
+      <p>📝 Submit Your Evidence & Theory:</p>
+      <textarea id="feedbackTextarea" class="feedback-textarea" placeholder="WITNESS STATEMENT: Enter your evidence and theory about the crime..."></textarea>
       <div class="feedback-button-group">
-        <button class="submit-button" onclick="submitFeedback()">Submit Feedback</button>
-        <button class="reset-button" onclick="resetVoting()">Cast Another Vote</button>
+        <button class="submit-button" onclick="submitFeedback()">📋 Submit Evidence</button>
+        <button class="reset-button" onclick="resetVoting()">🔄 New Accusation</button>
       </div>
       <div id="confirmationMessage"></div>
     </div>
@@ -392,14 +482,15 @@
     // Initialize Firebase with your project credentials
     // Replace these values with your Firebase project configuration
     const firebaseConfig = {
-      apiKey: "AIzaSyBQsEq1H8OEh5e5z3m0pK9qL3mN7qR5sT9",
-      authDomain: "online-voting-abc123.firebaseapp.com",
-      databaseURL: "https://online-voting-abc123-default-rtdb.firebaseio.com",
-      projectId: "online-voting-abc123",
-      storageBucket: "online-voting-abc123.appspot.com",
-      messagingSenderId: "123456789012",
-      appId: "1:123456789012:web:abcdef123456789"
-    };
+  apiKey: "AIzaSyC1bxz29svF9y_5V-8VJz0NaMsIzVOAwhI",
+  authDomain: "online-voting-b970f.firebaseapp.com",
+  databaseURL: "https://online-voting-b970f-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "online-voting-b970f",
+  storageBucket: "online-voting-b970f.firebasestorage.app",
+  messagingSenderId: "784746686625",
+  appId: "1:784746686625:web:eb6a565d11d7240d48a8e0"
+};
+    
 
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
@@ -409,31 +500,31 @@
     const suspectOptions = [
       {
         id: 'suspect1',
-        name: 'Alex Sterling',
-        role: 'Corporate Executive',
-        motive: 'Financial gain and power',
-        photoUrl: 'https://via.placeholder.com/400x300?text=Suspect+1'
+        name: 'Lydia Mercer',
+        role: 'First Year Student',
+        motive: 'age 23 - Campus access & knowledge',
+        photoUrl: 'images/lydia.jpg'
       },
       {
         id: 'suspect2',
-        name: 'Jordan Blake',
-        role: 'Personal Assistant',
-        motive: 'Revenge and betrayal',
-        photoUrl: 'https://via.placeholder.com/400x300?text=Suspect+2'
+        name: 'Marco Vale',
+        role: 'Final Year Student',
+        motive: 'age 27 - Academic pressure & secrets',
+        photoUrl: 'images/marco.jpg'
       },
       {
         id: 'suspect3',
-        name: 'Morgan Chase',
-        role: 'Business Rival',
-        motive: 'Competitive jealousy',
-        photoUrl: 'https://via.placeholder.com/400x300?text=Suspect+3'
+        name: 'Noah Kade',
+        role: 'Lab Assistant',
+        motive: 'age 32 - Lab access & expertise',
+        photoUrl: 'images/noah.jpg'
       },
       {
         id: 'suspect4',
-        name: 'Casey Turner',
-        role: 'Mysterious Stranger',
-        motive: 'Unknown connection',
-        photoUrl: 'https://via.placeholder.com/400x300?text=Suspect+4'
+        name: 'Theo Ash',
+        role: 'Third Year Student',
+        motive: 'age 25 - Hidden connections',
+        photoUrl: 'images/theo.jpg'
       }
     ];
 
