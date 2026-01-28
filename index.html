@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<!--
+  MIT License
+  
+  Copyright (c) 2026 Biraj Bhattarai
+  
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+  
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Investigator - Real-Time Voting</title>
+  <style>
+    /* ===== MOBILE-FIRST RESPONSIVE DESIGN ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #050505;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .header h1 {
+      font-size: 1.75rem;
+      color: #00ff41;
+      text-shadow: 0 0 10px #00ff41;
+      margin-bottom: 0.5rem;
+    }
+
+    .header p {
+      font-size: 0.875rem;
+      color: #007bff;
+      text-shadow: 0 0 5px #007bff;
+    }
+
+    /* ===== VOTING GRID (Phase 1 Main Content) ===== */
+    .voting-section {
+      opacity: 1;
+      transition: opacity 0.6s ease-in-out;
+    }
+
+    .voting-section.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .voting-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (min-width: 600px) {
+      .voting-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .voting-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+      }
+    }
+
+    /* ===== VOTING CARD (Suspect Card with Photo) ===== */
+    .voting-card {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      border: 3px solid #007bff;
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .voting-card:hover {
+      border-color: #00ff41;
+      box-shadow: 0 0 25px rgba(0, 255, 65, 0.4);
+      transform: translateY(-8px);
+    }
+
+    /* ===== SUSPECT PHOTO SECTION ===== */
+    .suspect-photo {
+      width: 100%;
+      height: 250px;
+      background: linear-gradient(135deg, #007bff, #0056cc);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: rgba(255, 255, 255, 0.3);
+      overflow: hidden;
+      border-bottom: 2px solid #00ff41;
+    }
+
+    .suspect-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ===== SUSPECT INFO SECTION ===== */
+    .suspect-info {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex-grow: 1;
+    }
+
+    .voting-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: #00ff41;
+      text-shadow: 0 0 8px rgba(0, 255, 65, 0.3);
+    }
+
+    .voting-card p {
+      font-size: 0.875rem;
+      color: #cccccc;
+      margin-bottom: 1.5rem;
+      line-height: 1.4;
+    }
+
+    /* ===== ACTION BUTTON (Min-height 60px for mobile accessibility) ===== */
+    .vote-button {
+      background-color: #007bff;
+      color: #ffffff;
+      border: none;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .vote-button:hover {
+      background-color: #00ff41;
+      color: #050505;
+      box-shadow: 0 0 15px rgba(0, 255, 65, 0.5);
+      transform: scale(1.05);
+    }
+
+    .vote-button:active {
+      transform: scale(0.98);
+    }
+
+    .vote-button:disabled {
+      background-color: #555555;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    /* ===== FEEDBACK SECTION (State Transition) ===== */
+    .feedback-section {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s ease-in-out;
+      text-align: center;
+      animation: slideIn 0.6s ease-in-out;
+    }
+
+    .feedback-section.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(20px);
+      }
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    .feedback-section h2 {
+      font-size: 1.5rem;
+      color: #00ff41;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 10px #00ff41;
+    }
+
+    .feedback-section p {
+      font-size: 0.875rem;
+      color: #cccccc;
+      margin-bottom: 1.5rem;
+    }
+
+    .feedback-textarea {
+      width: 100%;
+      max-width: 600px;
+      min-height: 150px;
+      padding: 1rem;
+      background-color: #1a1a1a;
+      color: #00ff41;
+      border: 2px solid #007bff;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.875rem;
+      resize: vertical;
+      margin-bottom: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .feedback-textarea:focus {
+      outline: none;
+      border-color: #00ff41;
+      box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+    }
+
+    .feedback-button-group {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 600px) {
+      .feedback-button-group {
+        flex-direction: row;
+        justify-content: center;
+      }
+    }
+
+    .submit-button, .reset-button {
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-height: 60px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      flex: 1;
+    }
+
+    .submit-button {
+      background-color: #00ff41;
+      color: #050505;
+    }
+
+    .submit-button:hover {
+      box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+      transform: scale(1.05);
+    }
+
+    .reset-button {
+      background-color: #007bff;
+      color: #ffffff;
+    }
+
+    .reset-button:hover {
+      box-shadow: 0 0 20px rgba(0, 123, 255, 0.5);
+      transform: scale(1.05);
+    }
+
+    /* ===== CONFIRMATION MESSAGE ===== */
+    .confirmation {
+      background-color: #1a1a1a;
+      border: 2px solid #00ff41;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+      text-align: center;
+      color: #00ff41;
+      font-weight: 600;
+      animation: slideIn 0.4s ease-in-out;
+    }
+
+    /* ===== ERROR MESSAGE ===== */
+    .error-message {
+      background-color: #1a0000;
+      border: 2px solid #ff4444;
+      border-radius: 8px;
+      padding: 1rem;
+      color: #ff4444;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      animation: slideIn 0.4s ease-in-out;
+    }
+
+    /* ===== LOADING STATE ===== */
+    .loading {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      background-color: #00ff41;
+      border-radius: 50%;
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header Section -->
+    <div class="header">
+      <h1>🔍 Digital Investigator</h1>
+      <p>Who is the Culprit? Cast Your Accusation</p>
+    </div>
+
+    <!-- Voting Section (Phase 1 - Primary) -->
+    <div id="votingSection" class="voting-section">
+      <div id="errorMessage"></div>
+      <div id="votingGrid" class="voting-grid">
+        <!-- Voting cards will be dynamically inserted here -->
+      </div>
+    </div>
+
+    <!-- Feedback Section (Phase 1 - State Transition) -->
+    <div id="feedbackSection" class="feedback-section">
+      <h2>✓ Your Vote Recorded</h2>
+      <p>Share your investigative insight:</p>
+      <textarea id="feedbackTextarea" class="feedback-textarea" placeholder="Enter your theory or feedback..."></textarea>
+      <div class="feedback-button-group">
+        <button class="submit-button" onclick="submitFeedback()">Submit Feedback</button>
+        <button class="reset-button" onclick="resetVoting()">Cast Another Vote</button>
+      </div>
+      <div id="confirmationMessage"></div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK (Compat SDK for Realtime Database) -->
+  <!-- Configuration block with clear comments -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+  <script>
+    /* ===== FIREBASE CONFIGURATION ===== */
+    // Initialize Firebase with your project credentials
+    // Replace these values with your Firebase project configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBQsEq1H8OEh5e5z3m0pK9qL3mN7qR5sT9",
+      authDomain: "online-voting-abc123.firebaseapp.com",
+      databaseURL: "https://online-voting-abc123-default-rtdb.firebaseio.com",
+      projectId: "online-voting-abc123",
+      storageBucket: "online-voting-abc123.appspot.com",
+      messagingSenderId: "123456789012",
+      appId: "1:123456789012:web:abcdef123456789"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    /* ===== SUSPECT DATA (4 Suspects - "Who is the Culprit?" Game) ===== */
+    const suspectOptions = [
+      {
+        id: 'suspect1',
+        name: 'Alex Sterling',
+        role: 'Corporate Executive',
+        motive: 'Financial gain and power',
+        photoUrl: 'https://via.placeholder.com/400x300?text=Suspect+1'
+      },
+      {
+        id: 'suspect2',
+        name: 'Jordan Blake',
+        role: 'Personal Assistant',
+        motive: 'Revenge and betrayal',
+        photoUrl: 'https://via.placeholder.com/400x300?text=Suspect+2'
+      },
+      {
+        id: 'suspect3',
+        name: 'Morgan Chase',
+        role: 'Business Rival',
+        motive: 'Competitive jealousy',
+        photoUrl: 'https://via.placeholder.com/400x300?text=Suspect+3'
+      },
+      {
+        id: 'suspect4',
+        name: 'Casey Turner',
+        role: 'Mysterious Stranger',
+        motive: 'Unknown connection',
+        photoUrl: 'https://via.placeholder.com/400x300?text=Suspect+4'
+      }
+    ];
+
+    let hasVoted = false;
+    let currentVote = null;
+
+    /* ===== INITIALIZE VOTING GRID ===== */
+    function initializeVotingGrid() {
+      const grid = document.getElementById('votingGrid');
+      grid.innerHTML = ''; // Clear previous content
+
+      suspectOptions.forEach(suspect => {
+        const card = document.createElement('div');
+        card.className = 'voting-card';
+        card.innerHTML = `
+          <div class="suspect-photo">
+            <img src="${suspect.photoUrl}" alt="${suspect.name}" onerror="this.style.display='none'">
+          </div>
+          <div class="suspect-info">
+            <div>
+              <h3>${suspect.name}</h3>
+              <p><strong>Role:</strong> ${suspect.role}</p>
+              <p><strong>Motive:</strong> ${suspect.motive}</p>
+            </div>
+            <button class="vote-button" onclick="castVote('${suspect.id}', '${suspect.name}')">
+              Accuse
+            </button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    /* ===== CAST VOTE (Firebase Transaction for Atomicity) ===== */
+    function castVote(optionId, optionTitle) {
+      if (hasVoted) {
+        showError('You have already voted. Submit your feedback or cast another vote.');
+        return;
+      }
+
+      // Disable all buttons during transaction
+      disableAllButtons();
+
+      // Use Firebase transaction to ensure atomicity during high-traffic voting
+      db.ref('votes/' + optionId).transaction(currentValue => {
+        return (currentValue || 0) + 1;
+      }).then(result => {
+        if (result.committed) {
+          hasVoted = true;
+          currentVote = optionTitle;
+          showFeedbackSection();
+          console.log(`✓ Vote recorded for: ${optionTitle}`);
+        }
+      }).catch(error => {
+        enableAllButtons();
+        showError('Failed to cast vote. Please try again.');
+        console.error('Transaction failed:', error);
+      });
+    }
+
+    /* ===== SUBMIT FEEDBACK (Push to Firebase with Timestamp) ===== */
+    function submitFeedback() {
+      const feedbackText = document.getElementById('feedbackTextarea').value.trim();
+
+      if (!feedbackText) {
+        showError('Please enter your feedback before submitting.');
+        return;
+      }
+
+      disableAllButtons();
+
+      // Push feedback to Firebase with timestamp
+      db.ref('feedback/').push({
+        option: currentVote,
+        feedback: feedbackText,
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+      }).then(() => {
+        showConfirmation('Thank you! Your feedback has been recorded.');
+        document.getElementById('feedbackTextarea').value = '';
+        console.log('✓ Feedback submitted');
+        enableAllButtons();
+      }).catch(error => {
+        enableAllButtons();
+        showError('Failed to submit feedback. Please try again.');
+        console.error('Feedback push failed:', error);
+      });
+    }
+
+    /* ===== RESET VOTING ===== */
+    function resetVoting() {
+      hasVoted = false;
+      currentVote = null;
+      document.getElementById('feedbackTextarea').value = '';
+      document.getElementById('confirmationMessage').innerHTML = '';
+      document.getElementById('votingSection').classList.remove('fade-out');
+      document.getElementById('feedbackSection').classList.remove('show');
+      initializeVotingGrid();
+    }
+
+    /* ===== UI HELPER FUNCTIONS ===== */
+    function showFeedbackSection() {
+      document.getElementById('votingSection').classList.add('fade-out');
+      document.getElementById('feedbackSection').classList.add('show');
+    }
+
+    function showError(message) {
+      const errorDiv = document.getElementById('errorMessage');
+      errorDiv.innerHTML = `<div class="error-message">${message}</div>`;
+      setTimeout(() => {
+        errorDiv.innerHTML = '';
+      }, 5000);
+    }
+
+    function showConfirmation(message) {
+      const confirmDiv = document.getElementById('confirmationMessage');
+      confirmDiv.innerHTML = `<div class="confirmation">${message}</div>`;
+    }
+
+    function disableAllButtons() {
+      document.querySelectorAll('.vote-button, .submit-button, .reset-button').forEach(btn => {
+        btn.disabled = true;
+      });
+    }
+
+    function enableAllButtons() {
+      document.querySelectorAll('.vote-button, .submit-button, .reset-button').forEach(btn => {
+        btn.disabled = false;
+      });
+    }
+
+    /* ===== INITIALIZE ON PAGE LOAD ===== */
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('🔍 Digital Investigator - Participant Portal Initialized');
+      initializeVotingGrid();
+    });
+  </script>
+</body>
+</html>

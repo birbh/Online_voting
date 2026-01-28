@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<!--
+  MIT License
+  
+  Copyright (c) 2026 Biraj Bhattarai
+  
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+  
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin HUD - Real-Time Analytics</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+  <style>
+    /* ===== MOBILE-FIRST RESPONSIVE DESIGN ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #050505;
+      color: #ffffff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ===== AUTHENTICATION OVERLAY (Full-Screen CSS) ===== */
+    .auth-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(5, 5, 5, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      backdrop-filter: blur(5px);
+    }
+
+    .auth-overlay.hidden {
+      display: none;
+    }
+
+    .auth-container {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      border: 2px solid #007bff;
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      max-width: 400px;
+      animation: slideUp 0.5s ease-in-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .auth-container h1 {
+      font-size: 1.75rem;
+      color: #00ff41;
+      text-shadow: 0 0 10px #00ff41;
+      margin-bottom: 1rem;
+    }
+
+    .auth-container p {
+      font-size: 0.875rem;
+      color: #cccccc;
+      margin-bottom: 1.5rem;
+    }
+
+    .badge-input {
+      width: 100%;
+      padding: 1rem;
+      background-color: #1a1a1a;
+      color: #00ff41;
+      border: 2px solid #007bff;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: 'Courier New', monospace;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .badge-input:focus {
+      outline: none;
+      border-color: #00ff41;
+      box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+    }
+
+    .auth-button {
+      width: 100%;
+      padding: 1rem;
+      background-color: #007bff;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-height: 60px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .auth-button:hover {
+      background-color: #00ff41;
+      color: #050505;
+      box-shadow: 0 0 15px rgba(0, 255, 65, 0.5);
+    }
+
+    .auth-button:disabled {
+      background-color: #555555;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .auth-error {
+      color: #ff4444;
+      font-size: 0.875rem;
+      margin-top: 1rem;
+    }
+
+    /* ===== MAIN DASHBOARD ===== */
+    .dashboard {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      padding: 2rem 1rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 768px) {
+      .dashboard {
+        grid-template-columns: 1fr 1fr;
+        padding: 2rem;
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .dashboard {
+        grid-template-columns: 2fr 1fr;
+      }
+    }
+
+    /* ===== HEADER ===== */
+    .dashboard-header {
+      grid-column: 1 / -1;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .dashboard-header h1 {
+      font-size: 2rem;
+      color: #00ff41;
+      text-shadow: 0 0 10px #00ff41;
+      margin-bottom: 0.5rem;
+    }
+
+    .dashboard-header p {
+      color: #007bff;
+      text-shadow: 0 0 5px #007bff;
+    }
+
+    /* ===== ANALYTICS PANEL (Chart.js) ===== */
+    .analytics-panel {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      border: 2px solid #007bff;
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .analytics-panel:hover {
+      box-shadow: 0 0 20px rgba(0, 123, 255, 0.3);
+    }
+
+    .analytics-panel h2 {
+      font-size: 1.5rem;
+      color: #00ff41;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .chart-container {
+      position: relative;
+      height: 300px;
+      margin-bottom: 1rem;
+    }
+
+    @media (min-width: 768px) {
+      .chart-container {
+        height: 400px;
+      }
+    }
+
+    /* ===== FEEDBACK STREAM PANEL ===== */
+    .feedback-panel {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      border: 2px solid #007bff;
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+    }
+
+    .feedback-panel:hover {
+      box-shadow: 0 0 20px rgba(0, 123, 255, 0.3);
+    }
+
+    .feedback-panel h2 {
+      font-size: 1.5rem;
+      color: #00ff41;
+      margin-bottom: 1.5rem;
+    }
+
+    .feedback-stream {
+      flex-grow: 1;
+      overflow-y: auto;
+      max-height: 500px;
+      padding-right: 0.5rem;
+    }
+
+    .feedback-stream::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .feedback-stream::-webkit-scrollbar-track {
+      background: #1a1a1a;
+      border-radius: 4px;
+    }
+
+    .feedback-stream::-webkit-scrollbar-thumb {
+      background: #007bff;
+      border-radius: 4px;
+    }
+
+    .feedback-stream::-webkit-scrollbar-thumb:hover {
+      background: #00ff41;
+    }
+
+    .feedback-item {
+      background-color: #050505;
+      border-left: 4px solid #00ff41;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 4px;
+      animation: slideIn 0.4s ease-in-out;
+      font-size: 0.875rem;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(-20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .feedback-option {
+      color: #007bff;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .feedback-text {
+      color: #cccccc;
+      word-wrap: break-word;
+    }
+
+    .feedback-time {
+      color: #999999;
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    /* ===== EMPTY STATE ===== */
+    .empty-state {
+      text-align: center;
+      color: #999999;
+      padding: 2rem 0;
+      font-style: italic;
+    }
+
+    /* ===== CONTROL PANEL ===== */
+    .control-panel {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      border: 2px solid #007bff;
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .control-button {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-height: 50px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .refresh-button {
+      background-color: #007bff;
+      color: #ffffff;
+    }
+
+    .refresh-button:hover {
+      background-color: #00ff41;
+      color: #050505;
+      box-shadow: 0 0 15px rgba(0, 255, 65, 0.5);
+    }
+
+    .reset-button {
+      background-color: #ff4444;
+      color: #ffffff;
+    }
+
+    .reset-button:hover {
+      background-color: #ff0000;
+      box-shadow: 0 0 15px rgba(255, 68, 68, 0.5);
+    }
+
+    .control-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* ===== STATUS INDICATOR ===== */
+    .status {
+      font-size: 0.75rem;
+      color: #00ff41;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background-color: #00ff41;
+      border-radius: 50%;
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* ===== STATS ROW ===== */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      background-color: #050505;
+      border: 1px solid #007bff;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      color: #00ff41;
+      font-weight: 600;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: #999999;
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Authentication Overlay (Phase 2 - Primary Security) -->
+  <div id="authOverlay" class="auth-overlay">
+    <div class="auth-container">
+      <h1>🔐 Access Restricted</h1>
+      <p>Enter your Badge ID to access the Admin HUD</p>
+      <input 
+        id="badgeInput" 
+        type="password" 
+        class="badge-input" 
+        placeholder="Badge ID" 
+        onkeypress="handleBadgeKeypress(event)"
+      >
+      <button class="auth-button" onclick="authenticateBadge()">Authenticate</button>
+      <div id="authError" class="auth-error"></div>
+    </div>
+  </div>
+
+  <!-- Main Dashboard (Hidden until authenticated) -->
+  <div id="dashboard" class="dashboard" style="display: none;">
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+      <h1>📊 Admin HUD - Real-Time Analytics</h1>
+      <p><span class="status"><span class="status-dot"></span>Live Feed Active</span></p>
+    </div>
+
+    <!-- Analytics Panel with Chart.js -->
+    <div class="analytics-panel">
+      <h2>Vote Distribution</h2>
+      <div class="stats-row" id="statsRow"></div>
+      <div class="chart-container">
+        <canvas id="voteChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Feedback Stream Panel -->
+    <div class="feedback-panel">
+      <h2>Live Feedback Stream</h2>
+      <div id="feedbackStream" class="feedback-stream">
+        <div class="empty-state">Waiting for feedback...</div>
+      </div>
+    </div>
+
+    <!-- Control Panel -->
+    <div class="control-panel">
+      <button class="control-button refresh-button" onclick="refreshData()">
+        🔄 Refresh Data
+      </button>
+      <button class="control-button reset-button" onclick="triggerSystemReset()">
+        ⚠️ System Reset
+      </button>
+    </div>
+  </div>
+
+  <!-- Firebase SDK (Compat SDK for Realtime Database) -->
+  <!-- Configuration block with clear comments -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+  <script>
+    /* ===== FIREBASE CONFIGURATION ===== */
+    // Initialize Firebase with your project credentials
+    // Replace these values with your Firebase project configuration (same as index.html)
+    const firebaseConfig = {
+      apiKey: "AIzaSyBQsEq1H8OEh5e5z3m0pK9qL3mN7qR5sT9",
+      authDomain: "online-voting-abc123.firebaseapp.com",
+      databaseURL: "https://online-voting-abc123-default-rtdb.firebaseio.com",
+      projectId: "online-voting-abc123",
+      storageBucket: "online-voting-abc123.appspot.com",
+      messagingSenderId: "123456789012",
+      appId: "1:123456789012:web:abcdef123456789"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    /* ===== AUTHENTICATION CREDENTIALS ===== */
+    const BADGE_ID = "2026";          // First security key
+    const CLEAR_KEY = "CLEAR2026";    // Second security key for system reset
+
+    let isAuthenticated = false;
+    let voteChart = null;
+
+    /* ===== SUSPECT OPTIONS (Must match index.html) ===== */
+    const suspectOptions = [
+      { id: 'suspect1', name: 'Alex Sterling' },
+      { id: 'suspect2', name: 'Jordan Blake' },
+      { id: 'suspect3', name: 'Morgan Chase' },
+      { id: 'suspect4', name: 'Casey Turner' }
+    ];
+
+    /* ===== AUTHENTICATION LOGIC ===== */
+    function handleBadgeKeypress(event) {
+      if (event.key === 'Enter') {
+        authenticateBadge();
+      }
+    }
+
+    function authenticateBadge() {
+      const badgeInput = document.getElementById('badgeInput');
+      const authError = document.getElementById('authError');
+      const input = badgeInput.value.trim();
+
+      if (input === BADGE_ID) {
+        isAuthenticated = true;
+        document.getElementById('authOverlay').classList.add('hidden');
+        document.getElementById('dashboard').style.display = 'grid';
+        badgeInput.value = '';
+        authError.innerHTML = '';
+        console.log('✓ Authentication successful');
+        initializeDashboard();
+      } else {
+        authError.innerHTML = 'Invalid Badge ID. Access denied.';
+        badgeInput.value = '';
+        console.warn('✗ Authentication failed');
+      }
+    }
+
+    /* ===== INITIALIZE DASHBOARD ===== */
+    function initializeDashboard() {
+      console.log('📊 Initializing Admin Dashboard');
+      initializeChart();
+      loadVoteData();
+      subscribeToFeedback();
+    }
+
+    /* ===== INITIALIZE CHART.JS (Live Bar Chart) ===== */
+    function initializeChart() {
+      const ctx = document.getElementById('voteChart').getContext('2d');
+      
+      voteChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: suspectOptions.map(opt => opt.name),
+          datasets: [{
+            label: 'Accusations',
+            data: suspectOptions.map(() => 0),
+            backgroundColor: 'rgba(0, 255, 65, 0.7)',
+            borderColor: 'rgba(0, 255, 65, 1)',
+            borderWidth: 2,
+            borderRadius: 8,
+            hoverBackgroundColor: 'rgba(0, 123, 255, 0.7)',
+            hoverBorderColor: 'rgba(0, 123, 255, 1)',
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                color: '#cccccc'
+              },
+              grid: {
+                color: 'rgba(255, 255, 255, 0.1)'
+              }
+            },
+            x: {
+              ticks: {
+                color: '#cccccc',
+                font: {
+                  size: 10
+                }
+              },
+              grid: {
+                display: false
+              }
+            }
+          }
+        }
+      });
+    }
+
+    /* ===== LOAD VOTE DATA (Real-time sync) ===== */
+    function loadVoteData() {
+      db.ref('votes/').on('value', snapshot => {
+        const voteData = snapshot.val() || {};
+        const votes = suspectOptions.map(opt => voteData[opt.id] || 0);
+
+        // Update chart
+        voteChart.data.datasets[0].data = votes;
+        voteChart.update();
+
+        // Update stats
+        updateStats(votes);
+
+        console.log('📊 Accusation data updated:', voteData);
+      });
+    }
+
+    /* ===== UPDATE STATS CARDS ===== */
+    function updateStats(votes) {
+      const statsRow = document.getElementById('statsRow');
+      const totalVotes = votes.reduce((sum, v) => sum + v, 0);
+
+      statsRow.innerHTML = `
+        <div class="stat-card">
+          <div class="stat-value">${totalVotes}</div>
+          <div class="stat-label">Total Accusations</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">${suspectOptions.length}</div>
+          <div class="stat-label">Suspects</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">${Math.max(...votes) || 0}</div>
+          <div class="stat-label">Top Suspect</div>
+        </div>
+      `;
+    }
+
+    /* ===== SUBSCRIBE TO FEEDBACK (.on('child_added')) ===== */
+    function subscribeToFeedback() {
+      const feedbackStream = document.getElementById('feedbackStream');
+      let isFirstLoad = true;
+
+      db.ref('feedback/').on('child_added', snapshot => {
+        const feedback = snapshot.val();
+        const feedbackId = snapshot.key;
+
+        // Clear empty state on first feedback
+        if (isFirstLoad) {
+          feedbackStream.innerHTML = '';
+          isFirstLoad = false;
+        }
+
+        // Format timestamp
+        const date = new Date(feedback.timestamp);
+        const timeStr = date.toLocaleTimeString();
+
+        // Create feedback item
+        const feedbackItem = document.createElement('div');
+        feedbackItem.className = 'feedback-item';
+        feedbackItem.innerHTML = `
+          <div class="feedback-option">🗳️ ${feedback.option}</div>
+          <div class="feedback-text">"${feedback.feedback}"</div>
+          <div class="feedback-time">${timeStr}</div>
+        `;
+
+        // Prepend to stream (newest first)
+        feedbackStream.insertBefore(feedbackItem, feedbackStream.firstChild);
+
+        console.log('💬 New feedback received:', feedback);
+      });
+    }
+
+    /* ===== REFRESH DATA ===== */
+    function refreshData() {
+      console.log('🔄 Refreshing data...');
+      // The real-time listeners will automatically update
+      // This is a manual refresh trigger if needed
+    }
+
+    /* ===== SYSTEM RESET (Dual Authentication) ===== */
+    function triggerSystemReset() {
+      if (!confirm('⚠️ WARNING: This will permanently delete all votes and feedback. Are you sure?')) {
+        return;
+      }
+
+      const clearKey = prompt('Enter the System Clear Key to confirm reset:');
+
+      if (clearKey === null) {
+        return; // User cancelled
+      }
+
+      if (clearKey === CLEAR_KEY) {
+        performSystemReset();
+      } else {
+        alert('❌ Invalid Clear Key. System reset cancelled.');
+        console.warn('✗ Invalid clear key provided');
+      }
+    }
+
+    /* ===== PERFORM SYSTEM RESET (db.ref().remove()) ===== */
+    function performSystemReset() {
+      console.log('🗑️ Performing system reset...');
+      
+      db.ref('/').remove().then(() => {
+        alert('✓ System reset complete. All data purged.');
+        console.log('✓ All database entries removed');
+        
+        // Reset dashboard
+        if (voteChart) {
+          voteChart.data.datasets[0].data = votingOptions.map(() => 0);
+          voteChart.update();
+        }
+        
+        document.getElementById('feedbackStream').innerHTML = '<div class="empty-state">Waiting for feedback...</div>';
+        updateStats(votingOptions.map(() => 0));
+      }).catch(error => {
+        alert('❌ System reset failed. Please try again.');
+        console.error('Reset failed:', error);
+      });
+    }
+
+    /* ===== INITIALIZE ON PAGE LOAD ===== */
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('🔐 Admin HUD - Authentication Required');
+      document.getElementById('badgeInput').focus();
+    });
+  </script>
+</body>
+</html>
