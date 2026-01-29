@@ -100,6 +100,36 @@
       letter-spacing: 1px;
     }
 
+    .header-actions {
+      margin-top: 1rem;
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .header-link {
+      display: inline-block;
+      padding: 0.75rem 1.25rem;
+      background: #1a1a1a;
+      color: #FFC300;
+      border: 3px solid #DC143C;
+      text-decoration: none;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      box-shadow: 0 4px 0 #8B0000;
+      transition: all 0.2s ease;
+    }
+
+    .header-link:hover {
+      background: #DC143C;
+      color: #FFC300;
+      border-color: #FFC300;
+      transform: translateY(-2px);
+      box-shadow: 0 0 20px rgba(220, 20, 60, 0.8), 0 4px 0 #FFC300;
+    }
+
     /* ===== VOTING GRID (Phase 1 Main Content) ===== */
     .voting-section {
       opacity: 1;
@@ -269,131 +299,6 @@
       border-color: #666666;
     }
 
-    /* ===== FEEDBACK SECTION (State Transition) ===== */
-    .feedback-section {
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.6s ease-in-out;
-      text-align: center;
-      animation: slideIn 0.6s ease-in-out;
-      padding: 2rem;
-      background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
-      border: 3px solid #FFC300;
-      border-radius: 0;
-      box-shadow: 0 0 20px rgba(220, 20, 60, 0.5);
-    }
-
-    .feedback-section.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    @keyframes slideIn {
-      from {
-        transform: translateY(20px);
-      }
-      to {
-        transform: translateY(0);
-      }
-    }
-
-    .feedback-section h2 {
-      font-size: 1.5rem;
-      color: #FFC300;
-      margin-bottom: 1rem;
-      text-shadow: 0 0 15px #FFC300, 2px 2px 4px #000000;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-    }
-
-    .feedback-section p {
-      font-size: 0.875rem;
-      color: #ffffff;
-      margin-bottom: 1.5rem;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-
-    .feedback-textarea {
-      width: 100%;
-      max-width: 600px;
-      min-height: 150px;
-      padding: 1rem;
-      background-color: #2a2a2a;
-      color: #ffffff;
-      border: 3px solid #FFC300;
-      border-radius: 0;
-      font-family: 'Courier New', monospace;
-      font-size: 0.875rem;
-      resize: vertical;
-      margin-bottom: 1.5rem;
-      transition: all 0.3s ease;
-      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
-    }
-
-    .feedback-textarea:focus {
-      outline: none;
-      border-color: #DC143C;
-      box-shadow: 0 0 20px rgba(220, 20, 60, 0.5), inset 0 0 10px rgba(0, 0, 0, 0.8);
-    }
-
-    .feedback-button-group {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    @media (min-width: 600px) {
-      .feedback-button-group {
-        flex-direction: row;
-        justify-content: center;
-      }
-    }
-
-    .submit-button, .reset-button {
-      padding: 1rem 2rem;
-      border: 3px solid #FFC300;
-      border-radius: 0;
-      font-size: 1rem;
-      font-weight: 900;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      min-height: 60px;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      flex: 1;
-      box-shadow: 0 4px 0 #8B0000;
-    }
-
-    .submit-button {
-      background: #FFC300;
-      color: #000000;
-    }
-
-    .submit-button:hover {
-      background: #DC143C;
-      color: #FFC300;
-      box-shadow: 0 0 20px rgba(255, 195, 0, 0.8), 0 4px 0 #FFC300;
-      transform: translateY(-2px);
-    }
-
-    .reset-button {
-      background-color: #1a1a1a;
-      color: #FFC300;
-      border-color: #DC143C;
-    }
-
-    .reset-button:hover {
-      background-color: #DC143C;
-      color: #FFC300;
-      border-color: #FFC300;
-      box-shadow: 0 0 20px rgba(220, 20, 60, 0.8), 0 4px 0 #FFC300;
-      transform: translateY(-2px);
-    }
-
     /* ===== CONFIRMATION MESSAGE ===== */
     .confirmation {
       background-color: #1a1a1a;
@@ -449,6 +354,9 @@
     <div class="header">
       <h1>� CRIME SCENE INVESTIGATION 🚨</h1>
       <p>⚠️ Who is the Culprit? Cast Your Accusation ⚠️</p>
+      <div class="header-actions">
+        <a class="header-link" href="feedback.html">📝 Submit Evidence</a>
+      </div>
     </div>
 
     <!-- Voting Section (Phase 1 - Primary) -->
@@ -457,18 +365,6 @@
       <div id="votingGrid" class="voting-grid">
         <!-- Voting cards will be dynamically inserted here -->
       </div>
-    </div>
-
-    <!-- Feedback Section (Phase 1 - State Transition) -->
-    <div id="feedbackSection" class="feedback-section">
-      <h2>⚠️ ACCUSATION RECORDED ⚠️</h2>
-      <p>📝 Submit Your Evidence & Theory:</p>
-      <textarea id="feedbackTextarea" class="feedback-textarea" placeholder="WITNESS STATEMENT: Enter your evidence and theory about the crime..."></textarea>
-      <div class="feedback-button-group">
-        <button class="submit-button" onclick="submitFeedback()">📋 Submit Evidence</button>
-        <button class="reset-button" onclick="resetVoting()">🔄 New Accusation</button>
-      </div>
-      <div id="confirmationMessage"></div>
     </div>
   </div>
 
@@ -561,7 +457,7 @@
     /* ===== CAST VOTE (Firebase Transaction for Atomicity) ===== */
     function castVote(optionId, optionTitle) {
       if (hasVoted) {
-        showError('You have already voted. Submit your feedback or cast another vote.');
+        showError('You have already voted. Use “Submit Evidence” to leave feedback.');
         return;
       }
 
@@ -575,59 +471,14 @@
         if (result.committed) {
           hasVoted = true;
           currentVote = optionTitle;
-          showFeedbackSection();
           console.log(`✓ Vote recorded for: ${optionTitle}`);
+          window.location.href = `feedback.html?option=${encodeURIComponent(optionTitle)}`;
         }
       }).catch(error => {
         enableAllButtons();
         showError('Failed to cast vote. Please try again.');
         console.error('Transaction failed:', error);
       });
-    }
-
-    /* ===== SUBMIT FEEDBACK (Push to Firebase with Timestamp) ===== */
-    function submitFeedback() {
-      const feedbackText = document.getElementById('feedbackTextarea').value.trim();
-
-      if (!feedbackText) {
-        showError('Please enter your feedback before submitting.');
-        return;
-      }
-
-      disableAllButtons();
-
-      // Push feedback to Firebase with timestamp
-      db.ref('feedback/').push({
-        option: currentVote,
-        feedback: feedbackText,
-        timestamp: firebase.database.ServerValue.TIMESTAMP
-      }).then(() => {
-        showConfirmation('Thank you! Your feedback has been recorded.');
-        document.getElementById('feedbackTextarea').value = '';
-        console.log('✓ Feedback submitted');
-        enableAllButtons();
-      }).catch(error => {
-        enableAllButtons();
-        showError('Failed to submit feedback. Please try again.');
-        console.error('Feedback push failed:', error);
-      });
-    }
-
-    /* ===== RESET VOTING ===== */
-    function resetVoting() {
-      hasVoted = false;
-      currentVote = null;
-      document.getElementById('feedbackTextarea').value = '';
-      document.getElementById('confirmationMessage').innerHTML = '';
-      document.getElementById('votingSection').classList.remove('fade-out');
-      document.getElementById('feedbackSection').classList.remove('show');
-      initializeVotingGrid();
-    }
-
-    /* ===== UI HELPER FUNCTIONS ===== */
-    function showFeedbackSection() {
-      document.getElementById('votingSection').classList.add('fade-out');
-      document.getElementById('feedbackSection').classList.add('show');
     }
 
     function showError(message) {
@@ -638,19 +489,14 @@
       }, 5000);
     }
 
-    function showConfirmation(message) {
-      const confirmDiv = document.getElementById('confirmationMessage');
-      confirmDiv.innerHTML = `<div class="confirmation">${message}</div>`;
-    }
-
     function disableAllButtons() {
-      document.querySelectorAll('.vote-button, .submit-button, .reset-button').forEach(btn => {
+      document.querySelectorAll('.vote-button').forEach(btn => {
         btn.disabled = true;
       });
     }
 
     function enableAllButtons() {
-      document.querySelectorAll('.vote-button, .submit-button, .reset-button').forEach(btn => {
+      document.querySelectorAll('.vote-button').forEach(btn => {
         btn.disabled = false;
       });
     }

@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<!--
+  MIT License
+  
+  Copyright (c) 2026 Biraj Bhattarai
+  
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+  
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Submit Evidence - Feedback</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Courier New', monospace;
+      background-color: #1a1a1a;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      padding: 1.5rem;
+      background: #000000;
+      border: 3px solid #FFC300;
+      position: relative;
+      box-shadow: 0 0 20px rgba(220, 20, 60, 0.5);
+    }
+
+    .header::before {
+      content: '⚠️ WITNESS STATEMENT ⚠️';
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #DC143C;
+      color: #FFC300;
+      padding: 0.3rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      border: 2px solid #FFC300;
+    }
+
+    .header h1 {
+      font-size: 1.75rem;
+      color: #FFC300;
+      text-shadow: 0 0 15px #FFC300, 2px 2px 4px #000000;
+      margin-bottom: 0.5rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .header p {
+      font-size: 0.875rem;
+      color: #DC143C;
+      text-shadow: 0 0 10px #DC143C, 1px 1px 2px #000000;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 1rem;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .header-link {
+      display: inline-block;
+      padding: 0.75rem 1.25rem;
+      background: #1a1a1a;
+      color: #FFC300;
+      border: 3px solid #DC143C;
+      text-decoration: none;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      box-shadow: 0 4px 0 #8B0000;
+      transition: all 0.2s ease;
+    }
+
+    .header-link:hover {
+      background: #DC143C;
+      color: #FFC300;
+      border-color: #FFC300;
+      transform: translateY(-2px);
+      box-shadow: 0 0 20px rgba(220, 20, 60, 0.8), 0 4px 0 #FFC300;
+    }
+
+    .panel {
+      padding: 2rem;
+      background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+      border: 3px solid #FFC300;
+      box-shadow: 0 0 20px rgba(220, 20, 60, 0.5);
+    }
+
+    .panel h2 {
+      text-align: center;
+      font-size: 1.25rem;
+      color: #FFC300;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 10px rgba(255, 195, 0, 0.5);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    label {
+      display: block;
+      margin: 1rem auto 0.5rem;
+      max-width: 650px;
+      font-size: 0.875rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+
+    .select {
+      width: 100%;
+      max-width: 650px;
+      display: block;
+      margin: 0 auto;
+      padding: 1rem;
+      background-color: #2a2a2a;
+      color: #ffffff;
+      border: 3px solid #FFC300;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+    }
+
+    .select:focus {
+      outline: none;
+      border-color: #DC143C;
+      box-shadow: 0 0 20px rgba(220, 20, 60, 0.5);
+    }
+
+    .feedback-textarea {
+      width: 100%;
+      max-width: 650px;
+      min-height: 170px;
+      padding: 1rem;
+      background-color: #2a2a2a;
+      color: #ffffff;
+      border: 3px solid #FFC300;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      resize: vertical;
+      margin: 0 auto;
+      display: block;
+      transition: all 0.3s ease;
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .feedback-textarea:focus {
+      outline: none;
+      border-color: #DC143C;
+      box-shadow: 0 0 20px rgba(220, 20, 60, 0.5), inset 0 0 10px rgba(0, 0, 0, 0.8);
+    }
+
+    .button-row {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 650px;
+      margin: 1.25rem auto 0;
+    }
+
+    @media (min-width: 650px) {
+      .button-row {
+        flex-direction: row;
+      }
+    }
+
+    .button {
+      padding: 1rem 1.5rem;
+      border: 3px solid #FFC300;
+      background: #1a1a1a;
+      color: #FFC300;
+      font-size: 1rem;
+      font-weight: 900;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-height: 60px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      flex: 1;
+      box-shadow: 0 4px 0 #8B0000;
+    }
+
+    .button.primary {
+      background: #FFC300;
+      color: #000000;
+    }
+
+    .button:hover {
+      background: #DC143C;
+      color: #FFC300;
+      border-color: #FFC300;
+      transform: translateY(-2px);
+      box-shadow: 0 0 20px rgba(255, 195, 0, 0.8), 0 4px 0 #FFC300;
+    }
+
+    .button:disabled {
+      background-color: #666666;
+      color: #cccccc;
+      cursor: not-allowed;
+      opacity: 0.6;
+      border-color: #666666;
+      transform: none;
+      box-shadow: 0 4px 0 #444444;
+    }
+
+    .message {
+      max-width: 650px;
+      margin: 1rem auto 0;
+      text-align: center;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 1rem;
+      border: 3px solid;
+      background: #000000;
+    }
+
+    .message.error {
+      border-color: #DC143C;
+      color: #DC143C;
+      box-shadow: 0 0 15px rgba(220, 20, 60, 0.5);
+    }
+
+    .message.success {
+      border-color: #FFC300;
+      color: #FFC300;
+      box-shadow: 0 0 15px rgba(255, 195, 0, 0.5);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🚨 Submit Evidence</h1>
+      <p>📝 Provide feedback (no voting here)</p>
+      <div class="header-actions">
+        <a class="header-link" href="index.html">⬅️ Back to Voting</a>
+        <a class="header-link" href="admin.html">🔐 Admin HUD</a>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Witness Statement</h2>
+
+      <div id="messageArea"></div>
+
+      <label for="suspectSelect">Suspect (optional)</label>
+      <select id="suspectSelect" class="select">
+        <option value="">— General feedback (no suspect) —</option>
+      </select>
+
+      <label for="feedbackTextarea">Your evidence / theory</label>
+      <textarea
+        id="feedbackTextarea"
+        class="feedback-textarea"
+        placeholder="WITNESS STATEMENT: Enter your evidence and theory about the crime..."
+      ></textarea>
+
+      <div class="button-row">
+        <button id="submitBtn" class="button primary" type="button" onclick="submitFeedback()">📋 Submit Evidence</button>
+        <button id="clearBtn" class="button" type="button" onclick="clearForm()">🧹 Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK (Compat SDK for Realtime Database) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+  <script>
+    /* ===== FIREBASE CONFIGURATION ===== */
+    const firebaseConfig = {
+      apiKey: "AIzaSyC1bxz29svF9y_5V-8VJz0NaMsIzVOAwhI",
+      authDomain: "online-voting-b970f.firebaseapp.com",
+      databaseURL: "https://online-voting-b970f-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "online-voting-b970f",
+      storageBucket: "online-voting-b970f.firebasestorage.app",
+      messagingSenderId: "784746686625",
+      appId: "1:784746686625:web:eb6a565d11d7240d48a8e0"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const suspectOptions = [
+      { id: 'suspect1', name: 'Lydia Mercer' },
+      { id: 'suspect2', name: 'Marco Vale' },
+      { id: 'suspect3', name: 'Noah Kade' },
+      { id: 'suspect4', name: 'Theo Ash' }
+    ];
+
+    function setMessage(kind, text) {
+      const area = document.getElementById('messageArea');
+      if (!text) {
+        area.innerHTML = '';
+        return;
+      }
+
+      const safeText = String(text);
+      area.innerHTML = `<div class="message ${kind}">${safeText}</div>`;
+    }
+
+    function disableButtons(disabled) {
+      document.getElementById('submitBtn').disabled = disabled;
+      document.getElementById('clearBtn').disabled = disabled;
+      document.getElementById('suspectSelect').disabled = disabled;
+      document.getElementById('feedbackTextarea').disabled = disabled;
+    }
+
+    function clearForm() {
+      setMessage('', '');
+      document.getElementById('feedbackTextarea').value = '';
+
+      const select = document.getElementById('suspectSelect');
+      if (!select.disabled) {
+        select.value = '';
+      }
+    }
+
+    function getPrefillOptionFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const option = (params.get('option') || '').trim();
+      return option;
+    }
+
+    function initSuspectSelect() {
+      const select = document.getElementById('suspectSelect');
+
+      suspectOptions.forEach(opt => {
+        const el = document.createElement('option');
+        el.value = opt.name;
+        el.textContent = opt.name;
+        select.appendChild(el);
+      });
+
+      const prefill = getPrefillOptionFromUrl();
+      if (prefill) {
+        select.value = prefill;
+        select.disabled = true;
+        setMessage('success', `Accusation recorded: ${prefill}. Add your evidence below.`);
+      }
+    }
+
+    function submitFeedback() {
+      const select = document.getElementById('suspectSelect');
+      const option = (select.value || '').trim();
+      const feedbackText = document.getElementById('feedbackTextarea').value.trim();
+
+      if (!feedbackText) {
+        setMessage('error', 'Please enter your feedback before submitting.');
+        return;
+      }
+
+      disableButtons(true);
+      setMessage('', '');
+
+      db.ref('feedback/').push({
+        option: option || 'General',
+        feedback: feedbackText,
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+      }).then(() => {
+        document.getElementById('feedbackTextarea').value = '';
+        setMessage('success', 'Thank you! Your feedback has been recorded.');
+        disableButtons(false);
+      }).catch(error => {
+        console.error('Feedback push failed:', error);
+        setMessage('error', 'Failed to submit feedback. Please try again.');
+        disableButtons(false);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initSuspectSelect();
+      document.getElementById('feedbackTextarea').focus();
+    });
+  </script>
+</body>
+</html>
