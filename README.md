@@ -1,2 +1,84 @@
-# Online_voting
-A real-time, cross-platform engagement engine. Designed to transform passive audiences into active participants through live voting and qualitative feedback.
+# 🚨 Digital Investigator - Crime Scene Voting System
+
+A real-time interactive crime investigation voting application with live analytics. Users vote for suspects and submit evidence, while administrators monitor results through a secure dashboard.
+
+![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)
+![Firebase](https://img.shields.io/badge/Firebase-Realtime%20DB-orange)
+
+## ✨ Features
+
+- **Real-time voting** with Firebase sync
+- **Feedback submission** for evidence and theories
+- **Admin dashboard** with live analytics and Chart.js visualization
+- **SHA-256 hashed authentication** for admin access
+- **System reset** with dual-key confirmation
+- **Mobile-first responsive design**
+
+## 🚀 Quick Start
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/birbh/Online_voting.git
+   cd Online_voting
+   ```
+
+2. **Configure Firebase**
+   - Create a Firebase project at [console.firebase.google.com](https://console.firebase.google.com)
+   - Enable Realtime Database
+   - Update Firebase config in `index.html`, `feedback.html`, and `admin.html`
+   - Deploy rules from `docs/firebase-rules.json`
+
+3. **Deploy**
+   ```bash
+   # Local testing
+   python3 -m http.server 8000
+   # Or upload to GitHub Pages, Netlify, Vercel, etc.
+   ```
+
+## 📁 Project Structure
+
+```
+Online_voting/
+├── index.html           # Voting interface
+├── feedback.html        # Feedback submission
+├── admin.html           # Admin dashboard
+├── css/                 # Stylesheets
+├── images/              # Suspect photos
+├── docs/                # License, security docs, Firebase rules
+└── README.md
+```
+
+## 📖 Usage
+
+**Voting**: Open `index.html` → Choose suspect → Submit feedback
+
+**Admin**: Open `admin.html` → Enter credentials (see [docs/SECURITY.md](docs/SECURITY.md)) → View analytics
+
+**Reset**: Click "EVIDENCE PURGE" → Confirm → Enter clear key
+
+## 🔒 Security
+
+Admin credentials and setup instructions: **[docs/SECURITY.md](docs/SECURITY.md)**
+
+⚠️ Client-side authentication is **not production-ready**. Use Firebase Auth for real deployments.
+
+## 🛠️ Tech Stack
+
+HTML5 • CSS3 • JavaScript • Firebase Realtime Database • Chart.js
+
+## 📄 License
+
+MIT License - see [docs/LICENSE](docs/LICENSE)
+
+**Copyright © 2026 Biraj Bhattarai**
+
+## 🤖 AI Assistance
+
+This project was developed with assistance from AI tools for:
+- Code optimization and refactoring
+- Firebase Realtime Database connectivity and configuration
+- Security implementation (SHA-256 hashing, Firebase rules)
+- Architecture and best practices
+
+---
+
