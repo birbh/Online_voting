@@ -1,0 +1,15 @@
+{
+  "rules": {
+    ".read": true,
+    "votes": {
+      ".write": true
+    },
+    "feedback": {
+      ".write": true
+    },
+    "admin": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    }
+  }
+}

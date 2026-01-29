@@ -35,7 +35,7 @@
         placeholder="● ● ● ●" 
         onkeypress="handleBadgeKeypress(event)"
       >
-      <button class="auth-button" onclick="authenticateBadge()">🔓 AUTHENTICATE</button>
+      <button id="authButton" class="auth-button" onclick="authenticateBadge()">🔓 AUTHENTICATE</button>
       <div id="authError" class="auth-error"></div>
     </div>
   </div>
@@ -99,12 +99,24 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    /* ===== AUTHENTICATION CREDENTIALS ===== */
-    const BADGE_ID = "2026";          // First security key
-    const CLEAR_KEY = "CLEAR2026";    // Second security key for system reset
+    /* ===== AUTHENTICATION CREDENTIALS (Hashed) ===== */
+    // NOTE: Client-side authentication is NOT secure for production.
+    // For production, use Firebase Authentication + Security Rules.
+    // These are SHA-256 hashes for demo purposes.
+    const BADGE_HASH = "158a323a7ba44870f23d96f1516dd70aa48e9a72db4ebb026b0a89e212a208ab"; // SHA-256 of "2026"
+    const CLEAR_HASH = "441d5554947277937e54a89c2181ca51e8d3b09889cdf89a71e8c880f16af33b"; // SHA-256 of "CLEAR2026"
 
     let isAuthenticated = false;
     let voteChart = null;
+
+    /* ===== SIMPLE SHA-256 HASH FUNCTION ===== */
+    async function hashString(str) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(str);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
 
     /* ===== SUSPECT OPTIONS (Must match index.html) ===== */
     const suspectOptions = [
@@ -121,23 +133,50 @@
       }
     }
 
-    function authenticateBadge() {
+    async function authenticateBadge() {
       const badgeInput = document.getElementById('badgeInput');
       const authError = document.getElementById('authError');
+      const authButton = document.getElementById('authButton');
+      
+      if (!badgeInput || !authError || !authButton) {
+        console.error('Required elements not found');
+        return;
+      }
+      
       const input = badgeInput.value.trim();
 
-      if (input === BADGE_ID) {
-        isAuthenticated = true;
-        document.getElementById('authOverlay').classList.add('hidden');
-        document.getElementById('dashboard').style.display = 'grid';
-        badgeInput.value = '';
-        authError.innerHTML = '';
-        console.log('✓ Authentication successful');
-        initializeDashboard();
-      } else {
-        authError.innerHTML = 'Invalid Badge ID. Access denied.';
-        badgeInput.value = '';
-        console.warn('✗ Authentication failed');
+      if (!input) {
+        authError.innerHTML = 'Please enter a Badge ID.';
+        return;
+      }
+
+      // Disable button during hash computation
+      authButton.disabled = true;
+      authButton.textContent = 'VERIFYING...';
+
+      try {
+        const inputHash = await hashString(input);
+
+        if (inputHash === BADGE_HASH) {
+          isAuthenticated = true;
+          document.getElementById('authOverlay').classList.add('hidden');
+          document.getElementById('dashboard').style.display = 'grid';
+          badgeInput.value = '';
+          authError.innerHTML = '';
+          console.log('✓ Authentication successful');
+          initializeDashboard();
+        } else {
+          authError.innerHTML = 'Invalid Badge ID. Access denied.';
+          badgeInput.value = '';
+          authButton.disabled = false;
+          authButton.textContent = '🔓 AUTHENTICATE';
+          console.warn('✗ Authentication failed');
+        }
+      } catch (error) {
+        console.error('Authentication error:', error);
+        authError.innerHTML = 'Authentication failed. Please try again.';
+        authButton.disabled = false;
+        authButton.textContent = '🔓 AUTHENTICATE';
       }
     }
 
@@ -289,22 +328,31 @@
     }
 
     /* ===== SYSTEM RESET (Dual Authentication) ===== */
-    function triggerSystemReset() {
+    async function triggerSystemReset() {
       if (!confirm('⚠️ WARNING: This will permanently delete all votes and feedback. Are you sure?')) {
         return;
       }
 
       const clearKey = prompt('Enter the System Clear Key to confirm reset:');
 
-      if (clearKey === null) {
-        return; // User cancelled
+      if (clearKey === null || clearKey === '') {
+        return; // User cancelled or entered nothing
       }
 
-      if (clearKey === CLEAR_KEY) {
-        performSystemReset();
-      } else {
-        alert('❌ Invalid Clear Key. System reset cancelled.');
-        console.warn('✗ Invalid clear key provided');
+      try {
+        const clearKeyHash = await hashString(clearKey.trim());
+        console.log('Clear key hash computed:', clearKeyHash);
+        console.log('Expected hash:', CLEAR_HASH);
+
+        if (clearKeyHash === CLEAR_HASH) {
+          performSystemReset();
+        } else {
+          alert('❌ Invalid Clear Key. System reset cancelled.');
+          console.warn('✗ Invalid clear key provided');
+        }
+      } catch (error) {
+        console.error('Error during reset authentication:', error);
+        alert('❌ System reset failed. Please try again.');
       }
     }
 
@@ -312,18 +360,22 @@
     function performSystemReset() {
       console.log('🗑️ Performing system reset...');
       
-      db.ref('/').remove().then(() => {
+      // Delete votes and feedback separately (not root, due to security rules)
+      Promise.all([
+        db.ref('votes').remove(),
+        db.ref('feedback').remove()
+      ]).then(() => {
         alert('✓ System reset complete. All data purged.');
         console.log('✓ All database entries removed');
         
         // Reset dashboard
         if (voteChart) {
-          voteChart.data.datasets[0].data = votingOptions.map(() => 0);
+          voteChart.data.datasets[0].data = suspectOptions.map(() => 0);
           voteChart.update();
         }
         
         document.getElementById('feedbackStream').innerHTML = '<div class="empty-state">Waiting for feedback...</div>';
-        updateStats(votingOptions.map(() => 0));
+        updateStats(suspectOptions.map(() => 0));
       }).catch(error => {
         alert('❌ System reset failed. Please try again.');
         console.error('Reset failed:', error);

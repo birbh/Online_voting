@@ -47,6 +47,7 @@ body {
   box-shadow: 0 0 20px rgba(220, 20, 60, 0.5);
 }
 
+
 .header::before {
   content: '⚠️ CRIME SCENE - DO NOT CROSS ⚠️';
   position: absolute;
@@ -56,7 +57,7 @@ body {
   background: #DC143C;
   color: #FFC300;
   padding: 0.3rem 1rem;
-  font-size: 0.75rem;
+  font-size: 0.95rem;
   font-weight: 900;
   letter-spacing: 2px;
   border: 2px solid #FFC300;
@@ -69,10 +70,11 @@ body {
   margin-bottom: 0.5rem;
   font-weight: 900;
   letter-spacing: 2px;
+  margin-top: 50px;
 }
 
 .header p {
-  font-size: 0.875rem;
+  font-size: 0.975rem;
   color: #DC143C;
   text-shadow: 0 0 10px #DC143C, 1px 1px 2px #000000;
   font-weight: 700;
