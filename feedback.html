@@ -62,6 +62,9 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
+  <!-- Shared Configuration -->
+  <script src="config.js"></script>
+
   <script>
     /* ===== FIREBASE CONFIGURATION ===== */
     const firebaseConfig = {
@@ -77,12 +80,8 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    const suspectOptions = [
-      { id: 'suspect1', name: 'Lydia Mercer' },
-      { id: 'suspect2', name: 'Marco Vale' },
-      { id: 'suspect3', name: 'Noah Kade' },
-      { id: 'suspect4', name: 'Theo Ash' }
-    ];
+    /* ===== SUSPECT OPTIONS (Loaded from config.js) ===== */
+    // suspectOptions is now imported from config.js
 
     function setMessage(kind, text) {
       const area = document.getElementById('messageArea');
@@ -169,5 +168,10 @@
       document.getElementById('feedbackTextarea').focus();
     });
   </script>
+
+  <!-- MIT License Footer -->
+  <footer class="copyright-footer">
+    <p>&copy; 2026 Biraj Bhattarai. Licensed under the MIT License. | Submit Evidence - Digital Investigator</p>
+  </footer>
 </body>
 </html>

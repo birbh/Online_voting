@@ -81,6 +81,9 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
+  <!-- Shared Configuration -->
+  <script src="config.js"></script>
+
   <script>
     /* ===== FIREBASE CONFIGURATION ===== */
     // Initialize Firebase with your project credentials
@@ -109,6 +112,9 @@
     let isAuthenticated = false;
     let voteChart = null;
 
+    /* ===== SUSPECT OPTIONS (Loaded from config.js) ===== */
+    // suspectOptions is now imported from config.js
+
     /* ===== SIMPLE SHA-256 HASH FUNCTION ===== */
     async function hashString(str) {
       const encoder = new TextEncoder();
@@ -117,14 +123,6 @@
       const hashArray = Array.from(new Uint8Array(hashBuffer));
       return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
-
-    /* ===== SUSPECT OPTIONS (Must match index.html) ===== */
-    const suspectOptions = [
-      { id: 'suspect1', name: 'Lydia Mercer' },
-      { id: 'suspect2', name: 'Marco Vale' },
-      { id: 'suspect3', name: 'Noah Kade' },
-      { id: 'suspect4', name: 'Theo Ash' }
-    ];
 
     /* ===== AUTHENTICATION LOGIC ===== */
     function handleBadgeKeypress(event) {
@@ -388,5 +386,10 @@
       document.getElementById('badgeInput').focus();
     });
   </script>
+
+  <!-- MIT License Footer -->
+  <footer class="copyright-footer">
+    <p>&copy; 2026 Biraj Bhattarai. Licensed under the MIT License. | Admin HUD - Crime Scene Command Center</p>
+  </footer>
 </body>
 </html>

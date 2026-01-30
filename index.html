@@ -49,6 +49,9 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
+  <!-- Shared Configuration -->
+  <script src="config.js"></script>
+
   <script>
     /* ===== FIREBASE CONFIGURATION ===== */
     // Initialize Firebase with your project credentials
@@ -68,37 +71,8 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    /* ===== SUSPECT DATA (4 Suspects - "Who is the Culprit?" Game) ===== */
-    const suspectOptions = [
-      {
-        id: 'suspect1',
-        name: 'Lydia Mercer',
-        role: 'First Year Student',
-        motive: 'age 23 - Campus access & knowledge',
-        photoUrl: 'images/lydia.jpg'
-      },
-      {
-        id: 'suspect2',
-        name: 'Marco Vale',
-        role: 'Final Year Student',
-        motive: 'age 27 - Academic pressure & secrets',
-        photoUrl: 'images/marco.jpg'
-      },
-      {
-        id: 'suspect3',
-        name: 'Noah Kade',
-        role: 'Lab Assistant',
-        motive: 'age 32 - Lab access & expertise',
-        photoUrl: 'images/noah.jpg'
-      },
-      {
-        id: 'suspect4',
-        name: 'Theo Ash',
-        role: 'Third Year Student',
-        motive: 'age 25 - Hidden connections',
-        photoUrl: 'images/theo.jpg'
-      }
-    ];
+    /* ===== SUSPECT DATA (Loaded from config.js) ===== */
+    // suspectOptions is now imported from config.js
 
     let hasVoted = false;
     let currentVote = null;
