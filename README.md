@@ -38,14 +38,19 @@ A real-time interactive crime investigation voting application with live analyti
 ## 📁 Project Structure
 
 ```
-Online_voting/
-├── index.html           # Voting interface
-├── feedback.html        # Feedback submission
-├── admin.html           # Admin dashboard
-├── css/                 # Stylesheets
-├── images/              # Suspect photos
-├── docs/                # License, security docs, Firebase rules
-└── README.md
+📁 Online_voting/
+├── 📄 index.html          # Voting interface
+├── 📄 admin.html          # Admin dashboard
+├── 📄 feedback.html       # Evidence submission
+├── 📁 css/
+│   ├── index.css
+│   ├── admin.css
+│   └── feedback.css
+├── 📁 docs/
+│   ├── LICENSE
+│   ├── SECURITY.md
+│   └── firebase-rules.json
+└── 📄 README.md
 ```
 
 ## 📖 Usage

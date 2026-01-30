@@ -59,3 +59,17 @@ For production, implement:
 4. Firebase rules prevent unauthorized database writes
 
 **Note:** Determined attackers can still bypass client-side checks. This is a security improvement, not a complete solution.
+
+## Firebase Configuration Security
+
+⚠️ **Firebase API keys are visible in client code** - this is intentional and safe:
+
+- API keys authenticate your app to Firebase, not users
+- Security is enforced via [Firebase Rules](firebase-rules.json)
+- No sensitive operations require client-side secrets
+- See: [Google's official guidance](https://firebase.google.com/docs/projects/api-keys)
+
+For production apps with sensitive data, consider:
+- Firebase App Check (bot protection)
+- Backend API with Firebase Admin SDK
+- Environment variables + build tooling
