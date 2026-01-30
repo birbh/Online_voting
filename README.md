@@ -71,6 +71,11 @@ Admin credentials and setup instructions: **[docs/SECURITY.md](docs/SECURITY.md)
 
 HTML5 • CSS3 • JavaScript • Firebase Realtime Database • Chart.js
 
+## Demo--:
+
+https://github.com/user-attachments/assets/86fb4d7d-3ef0-4a20-b77c-7be5824090f1
+
+
 ## 📄 License
 
 MIT License - see [docs/LICENSE](docs/LICENSE)
