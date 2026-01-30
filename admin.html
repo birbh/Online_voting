@@ -21,7 +21,6 @@
   <title>Admin HUD - Real-Time Analytics</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
   <link rel="stylesheet" href="css/admin.css">
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-check-compat.js"></script>
 </head>
 <body>
   <!-- Authentication Overlay (Phase 2 - Primary Security) -->
@@ -99,10 +98,6 @@
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-
-    // Initialize App Check (optional but recommended for security)
-    const appCheck = firebase.appCheck();
-    appCheck.activate('6LfIVVssAAAAAG0wX3vjM0CAjMW8MJG4fKmzo5wR', true);
 
     /* ===== AUTHENTICATION CREDENTIALS (Hashed) ===== */
     // NOTE: Client-side authentication is NOT secure for production.

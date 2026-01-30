@@ -1,11 +1,11 @@
 {
   "rules": {
-    ".read": "auth != null || auth.token.app_check != null",
+    ".read": true,
     "votes": {
-      ".write": "auth.token.app_check != null"
+      ".write": true
     },
     "feedback": {
-      ".write": "auth.token.app_check != null"
+      ".write": true
     },
     "admin": {
       ".read": "auth != null",

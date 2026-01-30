@@ -20,7 +20,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Digital Investigator - Real-Time Voting</title>
   <link rel="stylesheet" href="css/index.css">
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-check-compat.js"></script>
+  
   </style>
 </head>
 <body>
@@ -67,10 +67,6 @@
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-
-    // Initialize App Check (optional but recommended for security)
-    const appCheck = firebase.appCheck();
-    appCheck.activate('6LfIVVssAAAAAG0wX3vjM0CAjMW8MJG4fKmzo5wR', true);
 
     /* ===== SUSPECT DATA (4 Suspects - "Who is the Culprit?" Game) ===== */
     const suspectOptions = [

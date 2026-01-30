@@ -20,7 +20,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Submit Evidence - Feedback</title>
   <link rel="stylesheet" href="css/feedback.css">
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-check-compat.js"></script>
+
    
 </head>
 <body>
@@ -76,10 +76,6 @@
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-
-    // Initialize App Check (optional but recommended for security)
-    const appCheck = firebase.appCheck();
-    appCheck.activate('6LfIVVssAAAAAG0wX3vjM0CAjMW8MJG4fKmzo5wR', true);
 
     const suspectOptions = [
       { id: 'suspect1', name: 'Lydia Mercer' },
