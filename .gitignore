@@ -25,6 +25,3 @@ build/
 .firebase/
 .firebaserc
 firebase-debug.log
-
-# Firebase configuration (contains credentials)
-js/firebase-config.js

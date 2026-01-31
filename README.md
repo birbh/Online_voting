@@ -25,8 +25,7 @@ A real-time interactive crime investigation voting application with live analyti
 2. **Configure Firebase**
    - Create a Firebase project at [console.firebase.google.com](https://console.firebase.google.com)
    - Enable Realtime Database
-   - Copy `js/firebase-config.example.js` to `js/firebase-config.js`
-   - Update `js/firebase-config.js` with your actual Firebase credentials from Project Settings > General > Your apps > Web app
+   - Update Firebase config in `index.html`, `feedback.html`, and `admin.html`
    - Deploy rules from `docs/firebase-rules.json`
    - For detailed instructions, see [docs/FIREBASE_SETUP.md](docs/FIREBASE_SETUP.md)
 
