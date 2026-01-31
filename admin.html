@@ -305,11 +305,22 @@
         // Create feedback item
         const feedbackItem = document.createElement('div');
         feedbackItem.className = 'feedback-item';
-        feedbackItem.innerHTML = `
-          <div class="feedback-option"> SUSPECT: ${feedback.option}</div>
-          <div class="feedback-text">📝 EVIDENCE: "${feedback.feedback}"</div>
-          <div class="feedback-time">${timeStr}</div>
-        `;
+
+        const optionDiv = document.createElement('div');
+        optionDiv.className = 'feedback-option';
+        optionDiv.textContent = ' SUSPECT: ' + (feedback.option ?? '');
+
+        const textDiv = document.createElement('div');
+        textDiv.className = 'feedback-text';
+        textDiv.textContent = '📝 EVIDENCE: "' + (feedback.feedback ?? '') + '"';
+
+        const timeDiv = document.createElement('div');
+        timeDiv.className = 'feedback-time';
+        timeDiv.textContent = timeStr;
+
+        feedbackItem.appendChild(optionDiv);
+        feedbackItem.appendChild(textDiv);
+        feedbackItem.appendChild(timeDiv);
 
         // Prepend to stream (newest first)
         feedbackStream.insertBefore(feedbackItem, feedbackStream.firstChild);
