@@ -24,10 +24,10 @@ A real-time interactive crime investigation voting application with live analyti
 
 2. **Configure Firebase**
    - Create a Firebase project at [console.firebase.google.com](https://console.firebase.google.com)
-   - Enable Realtime Database
-   - Update Firebase config in `index.html`, `feedback.html`, and `admin.html`
-   - Deploy rules from `docs/firebase-rules.json`
-   - For detailed instructions, see [docs/FIREBASE_SETUP.md](docs/FIREBASE_SETUP.md)
+   - Enable the required services in Firebase
+   - Update Firebase config in [js/config.js](js/config.js)
+   - Deploy rules from [docs/firebase-rules.json](docs/firebase-rules.json)
+   - For detailed instructions, see [docs/firebase-setup.md](docs/firebase-setup.md)
 
 3. **Deploy**
    ```bash
@@ -47,9 +47,12 @@ A real-time interactive crime investigation voting application with live analyti
 │   ├── index.css
 │   ├── admin.css
 │   └── feedback.css
+|── 📁 js/
+│   ├── config.js 
 ├── 📁 docs/
 │   ├── LICENSE
 │   ├── SECURITY.md
+│   ├── firebase-setup.md
 │   └── firebase-rules.json
 └── 📄 README.md
 ```
@@ -75,13 +78,6 @@ HTML5 • CSS3 • JavaScript • Firebase Realtime Database • Chart.js
 ## Demo--:
 
 https://github.com/user-attachments/assets/86fb4d7d-3ef0-4a20-b77c-7be5824090f1
-
-
-## Admin key:
-
-Login:2026
-
-Purging:CLEAR2026
 
 
 ## 📄 License

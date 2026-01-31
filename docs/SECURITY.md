@@ -51,6 +51,22 @@ For production, implement:
 4. **Rate limiting** to prevent brute-force attacks
 5. **HTTPS only** with secure headers
 
+
+## Note:
+- Don't forget to add your own firebase configuration in `index.html`,`feedback.html` and `admin.html`
+- Configuration format:
+    ```js
+    const firebaseConfig = {
+      apiKey: "<API_KEY>",
+      authDomain: "<AUTH_DOMAIN>",
+      projectId: "<PROJECT_ID>",
+      storageBucket: "<STORAGE_BUCKET>",
+      messagingSenderId: "<MESSAGING_SENDER_ID>",
+      appId: "<APP_ID>"
+    };  
+    ```
+- You should paste your confguration in those files where   "const firebaseConfig = " exists.
+  
 ### How It Works Now
 
 1. User enters badge ID → hashed with SHA-256 → compared to stored hash
