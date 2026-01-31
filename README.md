@@ -31,11 +31,17 @@ A real-time interactive crime investigation voting application with live analyti
    - For detailed instructions, see [docs/FIREBASE_SETUP.md](docs/FIREBASE_SETUP.md)
 
 3. **Deploy**
+   
+   **For Local Testing:**
    ```bash
-   # Local testing
    python3 -m http.server 8000
-   # Or upload to GitHub Pages, Netlify, Vercel, etc.
+   # Open http://localhost:8000
    ```
+   
+   **For GitHub Pages Deployment:**
+   - See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for complete deployment instructions
+   - Configure Firebase secrets in GitHub repository settings
+   - Push to main branch or manually trigger the deployment workflow
 
 ## 📁 Project Structure
 

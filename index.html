@@ -52,7 +52,9 @@
   <!-- Shared Configuration -->
   <script src="js/config.js"></script>
   <!-- Firebase Configuration (externalized for security) -->
-  <script src="js/firebase-config.js"></script>
+  <script src="js/firebase-config.js" onerror="console.log('Local firebase-config.js not found, using environment config')"></script>
+  <!-- Firebase Configuration Loader (handles both local and deployment scenarios) -->
+  <script src="js/firebase-config-loader.js"></script>
 
   <script>
     /* ===== FIREBASE INITIALIZATION ===== */
