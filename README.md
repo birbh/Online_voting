@@ -28,6 +28,7 @@ A real-time interactive crime investigation voting application with live analyti
    - Copy `js/firebase-config.example.js` to `js/firebase-config.js`
    - Update `js/firebase-config.js` with your actual Firebase credentials from Project Settings > General > Your apps > Web app
    - Deploy rules from `docs/firebase-rules.json`
+   - For detailed instructions, see [docs/FIREBASE_SETUP.md](docs/FIREBASE_SETUP.md)
 
 3. **Deploy**
    ```bash
