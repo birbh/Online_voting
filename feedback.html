@@ -64,18 +64,12 @@
 
   <!-- Shared Configuration -->
   <script src="js/config.js"></script>
+  <!-- Firebase Configuration (externalized for security) -->
+  <script src="js/firebase-config.js"></script>
 
   <script>
-    /* ===== FIREBASE CONFIGURATION ===== */
-    const firebaseConfig = {
-      apiKey: "AIzaSyC1bxz29svF9y_5V-8VJz0NaMsIzVOAwhI",
-      authDomain: "online-voting-b970f.firebaseapp.com",
-      databaseURL: "https://online-voting-b970f-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "online-voting-b970f",
-      storageBucket: "online-voting-b970f.firebasestorage.app",
-      messagingSenderId: "784746686625",
-      appId: "1:784746686625:web:eb6a565d11d7240d48a8e0"
-    };
+    /* ===== FIREBASE INITIALIZATION ===== */
+    // Firebase configuration is loaded from js/firebase-config.js
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();

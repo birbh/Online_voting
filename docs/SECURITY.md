@@ -62,12 +62,19 @@ For production, implement:
 
 ## Firebase Configuration Security
 
-⚠️ **Firebase API keys are visible in client code** - this is intentional and safe:
+✅ **Firebase credentials are now externalized** for better security:
 
+- Configuration is stored in `js/firebase-config.js` (excluded from version control)
+- A template file `js/firebase-config.example.js` is provided for setup
 - API keys authenticate your app to Firebase, not users
 - Security is enforced via [Firebase Rules](firebase-rules.json)
-- No sensitive operations require client-side secrets
+- Each developer uses their own Firebase project configuration
 - See: [Google's official guidance](https://firebase.google.com/docs/projects/api-keys)
+
+**Setup Instructions:**
+1. Copy `js/firebase-config.example.js` to `js/firebase-config.js`
+2. Replace placeholder values with your Firebase project credentials
+3. Never commit `js/firebase-config.js` to version control
 
 For production apps with sensitive data, consider:
 - Firebase App Check (bot protection)
