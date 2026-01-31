@@ -76,7 +76,7 @@ HTML5 • CSS3 • JavaScript • Firebase Realtime Database • Chart.js
 https://github.com/user-attachments/assets/86fb4d7d-3ef0-4a20-b77c-7be5824090f1
 
 
-##Admin key:
+## Admin key:
 
 Login:2026
 
