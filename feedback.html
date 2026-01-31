@@ -85,13 +85,26 @@
 
     function setMessage(kind, text) {
       const area = document.getElementById('messageArea');
+      if (!area) return;
+
+      // Clear existing content
+      area.innerHTML = '';
+
       if (!text) {
-        area.innerHTML = '';
         return;
       }
 
       const safeText = String(text);
-      area.innerHTML = `<div class="message ${kind}">${safeText}</div>`;
+
+      // Whitelist allowed message kinds to avoid class injection
+      const allowedKinds = ['success', 'error'];
+      const safeKind = allowedKinds.includes(kind) ? kind : '';
+
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'message' + (safeKind ? ' ' + safeKind : '');
+      messageDiv.textContent = safeText;
+
+      area.appendChild(messageDiv);
     }
 
     function disableButtons(disabled) {
