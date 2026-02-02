@@ -5,7 +5,7 @@ A real-time interactive crime investigation voting application with live analyti
 ![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Firebase](https://img.shields.io/badge/Firebase-Realtime%20DB-orange)
 
-## ✨ Features
+## Features
 
 - **Real-time voting** with Firebase sync
 - **Feedback submission** for evidence and theories
@@ -14,7 +14,7 @@ A real-time interactive crime investigation voting application with live analyti
 - **System reset** with dual-key confirmation
 - **Mobile-first responsive design**
 
-## 🚀 Quick Start
+## Quick Start
 
 1. **Clone the repository**
    ```bash
@@ -57,7 +57,7 @@ A real-time interactive crime investigation voting application with live analyti
 └── 📄 README.md
 ```
 
-## 📖 Usage
+## Usage
 
 **Voting**: Open `index.html` → Choose suspect → Submit feedback
 
@@ -65,13 +65,13 @@ A real-time interactive crime investigation voting application with live analyti
 
 **Reset**: Click "EVIDENCE PURGE" → Confirm → Enter clear key
 
-## 🔒 Security
+## Security
 
 Admin credentials and setup instructions: **[docs/SECURITY.md](docs/SECURITY.md)**
 
 ⚠️ Client-side authentication is **not production-ready**. Use Firebase Auth for real deployments.
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 HTML5 • CSS3 • JavaScript • Firebase Realtime Database • Chart.js
 
