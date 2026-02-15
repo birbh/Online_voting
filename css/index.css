@@ -1,34 +1,56 @@
-/* Extracted from index.html */
-
-/* ===== MOBILE-FIRST RESPONSIVE DESIGN ===== */
+/* ===== RESET ===== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+:root {
+  color-scheme: light;
+  --ink: #131417;
+  --ink-soft: #2b2e34;
+  --paper: #f7f2ec;
+  --paper-strong: #efe7de;
+  --accent: #c35a3a;
+  --accent-soft: #e7b8a8;
+  --teal: #2f6f6d;
+  --shadow: 0 20px 50px rgba(19, 20, 23, 0.12);
+  --radius: 18px;
+}
+
 body {
-  font-family: 'Courier New', monospace;
-  background-color: #1a1a1a;
-  color: #ffffff;
+  font-family: "Space Grotesk", sans-serif;
+  background: radial-gradient(circle at top left, #ffffff 0%, #f7f2ec 45%, #efe7de 100%);
+  color: var(--ink);
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding: 2rem 1.25rem 3rem;
   overflow-x: hidden;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: absolute;
+  inset: -20% 0 auto 0;
+  height: 60vh;
+  background: radial-gradient(circle at 20% 20%, rgba(195, 90, 58, 0.15), transparent 55%),
+    radial-gradient(circle at 80% 30%, rgba(47, 111, 109, 0.12), transparent 60%);
+  z-index: -1;
 }
 
 .container {
   width: 100%;
   max-width: 1200px;
-  animation: fadeIn 0.5s ease-in-out;
+  animation: fadeIn 0.6s ease-out;
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(-20px);
+    transform: translateY(14px);
   }
   to {
     opacity: 1;
@@ -38,84 +60,84 @@ body {
 
 /* ===== HEADER ===== */
 .header {
-  text-align: center;
+  text-align: left;
   margin-bottom: 2rem;
-  padding: 1.5rem;
-  background: #000000;
-  border: 3px solid #FFC300;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: var(--radius);
+  border: 1px solid rgba(19, 20, 23, 0.08);
+  box-shadow: var(--shadow);
   position: relative;
-  box-shadow: 0 0 20px rgba(220, 20, 60, 0.5);
 }
 
-
 .header::before {
-  content: '⚠️ CRIME SCENE - DO NOT CROSS ⚠️';
+  content: "Case File";
   position: absolute;
-  top: -15px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #DC143C;
-  color: #FFC300;
-  padding: 0.3rem 1rem;
-  font-size: 0.95rem;
-  font-weight: 900;
-  letter-spacing: 2px;
-  border: 2px solid #FFC300;
+  top: -12px;
+  left: 24px;
+  background: var(--paper-strong);
+  color: var(--ink-soft);
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  border: 1px solid rgba(19, 20, 23, 0.1);
 }
 
 .header h1 {
-  font-size: 1.75rem;
-  color: #FFC300;
-  text-shadow: 0 0 15px #FFC300, 2px 2px 4px #000000;
-  margin-bottom: 0.5rem;
-  font-weight: 900;
-  letter-spacing: 2px;
-  margin-top: 50px;
+  font-family: "Fraunces", serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: var(--ink);
+  margin-bottom: 0.75rem;
+  font-weight: 700;
 }
 
-.header p {
-  font-size: 0.975rem;
-  color: #DC143C;
-  text-shadow: 0 0 10px #DC143C, 1px 1px 2px #000000;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+.header-tagline {
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+  margin-bottom: 0.35rem;
+  max-width: 640px;
+}
+
+.header-note {
+  font-size: 0.9rem;
+  color: rgba(19, 20, 23, 0.6);
 }
 
 .header-actions {
-  margin-top: 1rem;
+  margin-top: 1.25rem;
   display: flex;
   gap: 0.75rem;
-  justify-content: center;
   flex-wrap: wrap;
 }
 
 .header-link {
-  display: inline-block;
-  padding: 0.75rem 1.25rem;
-  background: #1a1a1a;
-  color: #FFC300;
-  border: 3px solid #DC143C;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1.2rem;
+  background: var(--ink);
+  color: #ffffff;
+  border-radius: 999px;
   text-decoration: none;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  box-shadow: 0 4px 0 #8B0000;
-  transition: all 0.2s ease;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  box-shadow: 0 10px 20px rgba(19, 20, 23, 0.15);
 }
 
 .header-link:hover {
-  background: #DC143C;
-  color: #FFC300;
-  border-color: #FFC300;
   transform: translateY(-2px);
-  box-shadow: 0 0 20px rgba(220, 20, 60, 0.8), 0 4px 0 #FFC300;
+  background: var(--accent);
+  box-shadow: 0 16px 24px rgba(195, 90, 58, 0.25);
 }
 
-/* ===== VOTING GRID (Phase 1 Main Content) ===== */
+/* ===== VOTING GRID ===== */
 .voting-section {
   opacity: 1;
-  transition: opacity 0.6s ease-in-out;
+  transition: opacity 0.5s ease-in-out;
 }
 
 .voting-section.fade-out {
@@ -126,89 +148,71 @@ body {
 .voting-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1rem;
-  margin-bottom: 2rem;
+  gap: 1.25rem;
+  margin-bottom: 2.5rem;
 }
 
-@media (min-width: 600px) {
+@media (min-width: 700px) {
   .voting-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1100px) {
   .voting-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
+    gap: 1.75rem;
   }
 }
 
-/* ===== VOTING CARD (Suspect Card with Photo) ===== */
+/* ===== VOTING CARD ===== */
 .voting-card {
-  background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
-  border: 3px solid #FFC300;
-  border-radius: 0;
+  background: #ffffff;
+  border-radius: var(--radius);
   overflow: hidden;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  border: 1px solid rgba(19, 20, 23, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8), 0 0 0 2px #DC143C;
-  position: relative;
-}
-
-.voting-card::before {
-  content: '⚠️';
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 1.5rem;
-  z-index: 10;
-  filter: drop-shadow(0 0 5px #FFC300);
+  box-shadow: 0 18px 30px rgba(19, 20, 23, 0.08);
 }
 
 .voting-card:hover {
-  border-color: #DC143C;
-  box-shadow: 0 8px 25px rgba(220, 20, 60, 0.6), 0 0 0 3px #FFC300;
-  transform: translateY(-8px);
+  transform: translateY(-6px);
+  box-shadow: 0 24px 40px rgba(19, 20, 23, 0.16);
 }
 
 /* ===== SUSPECT PHOTO SECTION ===== */
 .suspect-photo {
   width: 100%;
-  height: auto;
-  background: linear-gradient(135deg, #DC143C, #8B0000);
+  height: 220px;
+  background: linear-gradient(135deg, #f2d6c9, #e3efe9);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 3rem;
-  color: rgba(255, 195, 0, 0.3);
-  overflow: hidden;
-  border-bottom: 3px solid #FFC300;
   position: relative;
+  overflow: hidden;
 }
 
 .suspect-photo::after {
-  content: 'EVIDENCE';
+  content: "Evidence";
   position: absolute;
-  bottom: 10px;
-  right: 10px;
-  background: #000000;
-  color: #FFC300;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 900;
-  letter-spacing: 1px;
-  border: 2px solid #FFC300;
+  bottom: 14px;
+  right: 14px;
+  background: rgba(19, 20, 23, 0.75);
+  color: #ffffff;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 999px;
 }
 
 .suspect-photo img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: grayscale(30%) contrast(1.2);
+  filter: saturate(0.9) contrast(1.05);
 }
 
 /* ===== SUSPECT INFO SECTION ===== */
@@ -216,115 +220,87 @@ body {
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 1rem;
   flex-grow: 1;
-  background: #1a1a1a;
 }
 
 .voting-card h3 {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-  color: #FFC300;
-  text-shadow: 0 0 10px rgba(255, 195, 0, 0.5), 2px 2px 4px #000000;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  font-family: "Fraunces", serif;
+  font-size: 1.4rem;
+  margin-bottom: 0.35rem;
+  color: var(--ink);
+  font-weight: 600;
 }
 
 .voting-card p {
-  font-size: 0.875rem;
-  color: #ffffff;
-  margin-bottom: 1.5rem;
-  line-height: 1.4;
-  text-shadow: 1px 1px 2px #000000;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  line-height: 1.5;
 }
 
-/* ===== ACTION BUTTON (Min-height 60px for mobile accessibility) ===== */
+/* ===== ACTION BUTTON ===== */
 .vote-button {
-  background: #FFC300;
-  color: #000000;
-  border: 3px solid #DC143C;
-  padding: 1rem 1.5rem;
-  border-radius: 0;
-  font-size: 1rem;
-  font-weight: 900;
+  background: var(--accent);
+  color: #ffffff;
+  border: none;
+  padding: 0.85rem 1.4rem;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  min-height: 60px;
-  display: flex;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  min-height: 52px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  box-shadow: 0 4px 0 #8B0000, 0 5px 10px rgba(0, 0, 0, 0.5);
-  position: relative;
+  letter-spacing: 0.02em;
+  box-shadow: 0 12px 18px rgba(195, 90, 58, 0.2);
 }
 
 .vote-button:hover {
-  background: #DC143C;
-  color: #FFC300;
-  border-color: #FFC300;
-  box-shadow: 0 0 20px rgba(255, 195, 0, 0.8), 0 4px 0 #FFC300;
+  background: #a64a32;
   transform: translateY(-2px);
+  box-shadow: 0 16px 24px rgba(195, 90, 58, 0.3);
 }
 
 .vote-button:active {
-  transform: translateY(2px);
-  box-shadow: 0 2px 0 #8B0000;
+  transform: translateY(1px);
 }
 
 .vote-button:disabled {
-  background-color: #666666;
-  color: #cccccc;
+  background-color: #b4b4b4;
+  color: #ffffff;
   cursor: not-allowed;
-  opacity: 0.6;
-  border-color: #666666;
-}
-
-/* ===== CONFIRMATION MESSAGE ===== */
-.confirmation {
-  background-color: #1a1a1a;
-  border: 3px solid #FFC300;
-  border-radius: 0;
-  padding: 1.5rem;
-  margin-top: 1.5rem;
-  text-align: center;
-  color: #FFC300;
-  font-weight: 900;
-  animation: slideIn 0.4s ease-in-out;
-  box-shadow: 0 0 15px rgba(255, 195, 0, 0.5);
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  opacity: 0.7;
 }
 
 /* ===== ERROR MESSAGE ===== */
 .error-message {
-  background-color: #1a0000;
-  border: 3px solid #DC143C;
-  border-radius: 0;
-  padding: 1rem;
-  color: #DC143C;
+  background-color: #fff2f0;
+  border: 1px solid rgba(195, 90, 58, 0.3);
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  color: #a63d2a;
   text-align: center;
   margin-bottom: 1.5rem;
+  font-weight: 600;
   animation: slideIn 0.4s ease-in-out;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  box-shadow: 0 0 15px rgba(220, 20, 60, 0.5);
 }
 
-/* ===== LOADING STATE ===== */
-.loading {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  background-color: #FFC300;
-  border-radius: 50%;
-  animation: pulse 1s infinite;
-  box-shadow: 0 0 10px #FFC300;
+@keyframes slideIn {
+  from {
+    transform: translateY(-6px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+/* ===== FOOTER ===== */
+.footer {
+  text-align: center;
+  font-size: 0.9rem;
+  color: rgba(19, 20, 23, 0.6);
 }

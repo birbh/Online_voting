@@ -18,20 +18,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Digital Investigator - Real-Time Voting</title>
+  <title>Crime Scene Vote - Live Accusations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/index.css">
-  
-  </style>
 </head>
 <body>
   <div class="container">
     <!-- Header Section -->
     <div class="header">
-      <h1>CRIME SCENE INVESTIGATION 🚨</h1>
-      <p>⚠️ Who is the Culprit? Cast Your Accusation ⚠️</p>
+      <h1>Crime Scene Vote</h1>
+      <p class="header-tagline">Who did it? Review the notes and make your call.</p>
+      <p class="header-note">One vote per device. Add evidence after you vote.</p>
       <div class="header-actions">
-        <a class="header-link" href="feedback.html">📝 Submit Evidence</a>
-        <a class="header-link" href="admin.html">🔐 Admin HUD</a>
+        <a class="header-link" href="feedback.html">Submit Evidence</a>
+        <a class="header-link" href="admin.html">Admin Console</a>
       </div>
     </div>
 
@@ -42,6 +44,10 @@
         <!-- Voting cards will be dynamically inserted here -->
       </div>
     </div>
+
+    <footer class="footer">
+      <span>Case files update in real time. Keep your feedback concise.</span>
+    </footer>
   </div>
 
   <!-- Firebase SDK (Compat SDK for Realtime Database) -->

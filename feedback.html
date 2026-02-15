@@ -19,18 +19,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Submit Evidence - Feedback</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/feedback.css">
-
-   
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1>🚨 Submit Evidence</h1>
-      <p>📝 Provide feedback (no voting here)</p>
+      <h1>Submit Evidence</h1>
+      <p class="header-tagline">Share observations, theories, and anything you noticed.</p>
+      <p class="header-note">No voting here. This is for context and notes only.</p>
       <div class="header-actions">
-        <a class="header-link" href="index.html">⬅️ Back to Voting</a>
-        <a class="header-link" href="admin.html">🔐 Admin HUD</a>
+        <a class="header-link" href="index.html">Back to Voting</a>
+        <a class="header-link" href="admin.html">Admin Console</a>
       </div>
     </div>
 
@@ -44,18 +46,22 @@
         <option value="">— General feedback (no suspect) —</option>
       </select>
 
-      <label for="feedbackTextarea">Your evidence / theory</label>
+      <label for="feedbackTextarea">Your evidence or theory</label>
       <textarea
         id="feedbackTextarea"
         class="feedback-textarea"
-        placeholder="WITNESS STATEMENT: Enter your evidence and theory about the crime..."
+        placeholder="Write your observations and reasoning..."
       ></textarea>
 
       <div class="button-row">
-        <button id="submitBtn" class="button primary" type="button" onclick="submitFeedback()">📋 Submit Evidence</button>
-        <button id="clearBtn" class="button" type="button" onclick="clearForm()">🧹 Clear</button>
+        <button id="submitBtn" class="button primary" type="button" onclick="submitFeedback()">Submit Evidence</button>
+        <button id="clearBtn" class="button" type="button" onclick="clearForm()">Clear</button>
       </div>
     </div>
+
+    <footer class="footer">
+      <span>Tip: short, specific notes are the most useful.</span>
+    </footer>
   </div>
 
   <!-- Firebase SDK (Compat SDK for Realtime Database) -->

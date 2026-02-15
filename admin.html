@@ -18,16 +18,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin HUD - Real-Time Analytics</title>
+  <title>Admin Console - Live Analytics</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
   <!-- Authentication Overlay (Phase 2 - Primary Security) -->
   <div id="authOverlay" class="auth-overlay">
     <div class="auth-container">
-      <h1> RESTRICTED ACCESS 🚨</h1>
-      <p>⚠️ Enter Security Clearance Code ⚠️</p>
+      <h1>Restricted Access</h1>
+      <p>Enter your clearance code to continue.</p>
       <input 
         id="badgeInput" 
         type="password" 
@@ -35,7 +38,7 @@
         placeholder="● ● ● ●" 
         onkeypress="handleBadgeKeypress(event)"
       >
-      <button id="authButton" class="auth-button" onclick="authenticateBadge()">🔓 AUTHENTICATE</button>
+      <button id="authButton" class="auth-button" onclick="authenticateBadge()">Authenticate</button>
       <div id="authError" class="auth-error"></div>
     </div>
   </div>
@@ -44,13 +47,13 @@
   <div id="dashboard" class="dashboard" style="display: none;">
     <!-- Dashboard Header -->
     <div class="dashboard-header">
-      <h1> CRIME SCENE COMMAND CENTER 🚨</h1>
-      <p><span class="status"><span class="status-dot"></span>⚠️ LIVE SURVEILLANCE ACTIVE ⚠️</span></p>
+      <h1>Crime Scene Command Center</h1>
+      <p><span class="status"><span class="status-dot"></span>Live surveillance active</span></p>
     </div>
 
     <!-- Analytics Panel with Chart.js -->
     <div class="analytics-panel">
-      <h2>📊 SUSPECT ACCUSATION ANALYSIS</h2>
+      <h2>Suspect Accusation Analysis</h2>
       <div class="stats-row" id="statsRow"></div>
       <div class="chart-container">
         <canvas id="voteChart"></canvas>
@@ -59,19 +62,19 @@
 
     <!-- Feedback Stream Panel -->
     <div class="feedback-panel">
-      <h2>📝 WITNESS STATEMENTS LOG</h2>
+      <h2>Witness Statements Log</h2>
       <div id="feedbackStream" class="feedback-stream">
-        <div class="empty-state">⚠️ AWAITING EVIDENCE SUBMISSIONS ⚠️</div>
+        <div class="empty-state">Awaiting evidence submissions.</div>
       </div>
     </div>
 
     <!-- Control Panel -->
     <div class="control-panel">
       <button class="control-button refresh-button" onclick="refreshData()">
-        🔄 REFRESH DATABASE
+        Refresh Database
       </button>
       <button class="control-button reset-button" onclick="triggerSystemReset()">
-        🚨 EVIDENCE PURGE 🚨
+        Evidence Purge
       </button>
     </div>
   </div>
@@ -197,12 +200,12 @@
           datasets: [{
             label: 'Accusations',
             data: suspectOptions.map(() => 0),
-            backgroundColor: 'rgba(255, 195, 0, 0.8)',
-            borderColor: 'rgba(220, 20, 60, 1)',
-            borderWidth: 3,
-            borderRadius: 0,
-            hoverBackgroundColor: 'rgba(220, 20, 60, 0.8)',
-            hoverBorderColor: 'rgba(255, 195, 0, 1)',
+            backgroundColor: 'rgba(195, 90, 58, 0.35)',
+            borderColor: '#c35a3a',
+            borderWidth: 2,
+            borderRadius: 8,
+            hoverBackgroundColor: 'rgba(47, 111, 109, 0.35)',
+            hoverBorderColor: '#2f6f6d',
           }]
         },
         options: {
@@ -217,23 +220,23 @@
             y: {
               beginAtZero: true,
               ticks: {
-                color: '#FFC300',
+                color: '#2b2e34',
                 font: {
-                  family: "'Courier New', monospace",
-                  weight: 'bold'
+                  family: "'Space Grotesk', sans-serif",
+                  weight: '600'
                 }
               },
               grid: {
-                color: 'rgba(255, 195, 0, 0.1)'
+                color: 'rgba(19, 20, 23, 0.08)'
               }
             },
             x: {
               ticks: {
-                color: '#FFC300',
+                color: '#2b2e34',
                 font: {
-                  size: 10,
-                  family: "'Courier New', monospace",
-                  weight: 'bold'
+                  size: 11,
+                  family: "'Space Grotesk', sans-serif",
+                  weight: '600'
                 }
               },
               grid: {

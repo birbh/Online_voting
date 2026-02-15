@@ -1,91 +1,34 @@
 # Security Implementation
 
-## Admin Credentials(be sure to keep this confidential)
+## Admin credentials (keep confidential)
 
-**Badge ID:** `2026`  
-**Clear Key:** `CLEAR2026`
+- Badge ID: `2026`
+- Clear Key: `CLEAR2026`
 
-## Security Measures
+## What this demo includes
 
-### 1. SHA-256 Hashing
-- Credentials are now hashed using SHA-256 before comparison
-- Plain-text passwords are never stored in the code
-- Hashes stored in code: harder to reverse-engineer (but not impossible)
+### 1. SHA-256 hashing (client-side)
+- Credentials are hashed before comparison.
+- Plain-text values are not stored in the code.
+- This is a demo-only safeguard, not production security.
 
-### 2. Firebase Security Rules
-Upload `firebase-rules.json` to your Firebase Console:
+### 2. Firebase Realtime Database rules
 
-```bash
-firebase deploy --only database
-```
+Upload [docs/firebase-rules.json](firebase-rules.json) to the Firebase console:
 
-Or manually in Firebase Console → Realtime Database → Rules tab:
+1. Go to **Realtime Database** -> **Rules**.
+2. Paste the file contents.
+3. Click **Publish**.
 
-```json
-{
-  "rules": {
-    ".read": true,
-    ".write": false,
-    "votes": {
-      ".write": true
-    },
-    "feedback": {
-      ".write": true
-    },
-    "admin": {
-      ".read": "auth != null",
-      ".write": "auth != null"
-    }
-  }
-}
-```
+## Recommended for production
 
-### 3. Recommended for Production
+Client-side authentication can be bypassed. For production use:
 
-**Important:** Client-side authentication is NOT secure for production apps.
+1. Firebase Authentication
+2. Server-side APIs with Firebase Admin SDK
+3. Rate limiting and audit logging
+4. Strict HTTPS with security headers
 
-For production, implement:
-1. **Firebase Authentication** (email/password, Google, etc.)
-2. **Server-side API** with proper session management
-3. **Environment variables** for sensitive config
-4. **Rate limiting** to prevent brute-force attacks
-5. **HTTPS only** with secure headers
+## Firebase config visibility
 
-
-## Note:
-- Don't forget to add your own firebase configuration in `index.html`,`feedback.html` and `admin.html`
-- Configuration format:
-    ```js
-    const firebaseConfig = {
-      apiKey: "<API_KEY>",
-      authDomain: "<AUTH_DOMAIN>",
-      projectId: "<PROJECT_ID>",
-      storageBucket: "<STORAGE_BUCKET>",
-      messagingSenderId: "<MESSAGING_SENDER_ID>",
-      appId: "<APP_ID>"
-    };  
-    ```
-- You should paste your confguration in those files where   "const firebaseConfig = " exists.
-  
-### How It Works Now
-
-1. User enters badge ID → hashed with SHA-256 → compared to stored hash
-2. System reset key → hashed → compared to stored hash
-3. No plain-text credentials visible in inspect tool
-4. Firebase rules prevent unauthorized database writes
-
-**Note:** Determined attackers can still bypass client-side checks. This is a security improvement, not a complete solution.
-
-## Firebase Configuration Security
-
-⚠️ **Firebase API keys are visible in client code** - this is intentional and safe:
-
-- API keys authenticate your app to Firebase, not users
-- Security is enforced via [Firebase Rules](firebase-rules.json)
-- No sensitive operations require client-side secrets
-- See: [Google's official guidance](https://firebase.google.com/docs/projects/api-keys)
-
-For production apps with sensitive data, consider:
-- Firebase App Check (bot protection)
-- Backend API with Firebase Admin SDK
-- Environment variables + build tooling
+Firebase API keys are visible in client code by design. Use rules and authentication to secure data access. See: https://firebase.google.com/docs/projects/api-keys
