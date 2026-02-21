@@ -1,78 +1,48 @@
 <!DOCTYPE html>
-<!--
-  MIT License
-  
-  Copyright (c) 2026 Biraj Bhattarai
-  
-  Permission is hereby granted, free of charge, to any person obtaining a copy
-  of this software and associated documentation files (the "Software"), to deal
-  in the Software without restriction, including without limitation the rights
-  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-  copies of the Software, and to permit persons to whom the Software is
-  furnished to do so, subject to the following conditions:
-  
-  The above copyright notice and this permission notice shall be included in all
-  copies or substantial portions of the Software.
--->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Submit Evidence - Feedback</title>
+  <title>Your Notes - Feedback</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/feedback.css">
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>Submit Evidence</h1>
-      <p class="header-tagline">Share observations, theories, and anything you noticed.</p>
-      <p class="header-note">No voting here. This is for context and notes only.</p>
-      <div class="header-actions">
-        <a class="header-link" href="index.html">Back to Voting</a>
-        <a class="header-link" href="admin.html">Admin Console</a>
+  <div class="form-container">
+    <div class="form-header">
+      <h1>Witness Notes</h1>
+      <p>Did you see something? Write it down.</p>
+      <div class="nav-links">
+        <a href="index.html">Back</a>
+        <a href="admin.html">Admin</a>
       </div>
     </div>
 
-    <div class="panel">
-      <h2>Witness Statement</h2>
+    <div class="form-card">
+      <div id="notice"></div>
 
-      <div id="messageArea"></div>
-
-      <label for="suspectSelect">Suspect (optional)</label>
-      <select id="suspectSelect" class="select">
-        <option value="">— General feedback (no suspect) —</option>
+      <label>Who is this about?</label>
+      <select id="who">
+        <option value="General">— Just a general note —</option>
       </select>
 
-      <label for="feedbackTextarea">Your evidence or theory</label>
-      <textarea
-        id="feedbackTextarea"
-        class="feedback-textarea"
-        placeholder="Write your observations and reasoning..."
-      ></textarea>
+      <label>What happened?</label>
+      <textarea id="note" placeholder="I saw Noah near the lab..."></textarea>
 
-      <div class="button-row">
-        <button id="submitBtn" class="button primary" type="button" onclick="submitFeedback()">Submit Evidence</button>
-        <button id="clearBtn" class="button" type="button" onclick="clearForm()">Clear</button>
+      <div class="btns">
+        <button id="send" onclick="sendNote()">Send Evidence</button>
+        <button id="reset" onclick="clearMe()">Clear</button>
       </div>
     </div>
-
-    <footer class="footer">
-      <span>Tip: short, specific notes are the most useful.</span>
-    </footer>
   </div>
 
-  <!-- Firebase SDK (Compat SDK for Realtime Database) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
-  <!-- Shared Configuration -->
   <script src="js/config.js"></script>
 
   <script>
-    /* ===== FIREBASE CONFIGURATION ===== */
     const firebaseConfig = {
       apiKey: "AIzaSyC1bxz29svF9y_5V-8VJz0NaMsIzVOAwhI",
       authDomain: "online-voting-b970f.firebaseapp.com",
@@ -86,107 +56,47 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    /* ===== SUSPECT OPTIONS (Loaded from config.js) ===== */
-    // suspectOptions is now imported from config.js
-
-    function setMessage(kind, text) {
-      const area = document.getElementById('messageArea');
-      if (!area) return;
-
-      // Clear existing content
-      area.innerHTML = '';
-
-      if (!text) {
-        return;
-      }
-
-      const safeText = String(text);
-
-      // Whitelist allowed message kinds to avoid class injection
-      const allowedKinds = ['success', 'error'];
-      const safeKind = allowedKinds.includes(kind) ? kind : '';
-
-      const messageDiv = document.createElement('div');
-      messageDiv.className = 'message' + (safeKind ? ' ' + safeKind : '');
-      messageDiv.textContent = safeText;
-
-      area.appendChild(messageDiv);
-    }
-
-    function disableButtons(disabled) {
-      document.getElementById('submitBtn').disabled = disabled;
-      document.getElementById('clearBtn').disabled = disabled;
-      document.getElementById('suspectSelect').disabled = disabled;
-      document.getElementById('feedbackTextarea').disabled = disabled;
-    }
-
-    function clearForm() {
-      setMessage('', '');
-      document.getElementById('feedbackTextarea').value = '';
-
-      const select = document.getElementById('suspectSelect');
-      if (!select.disabled) {
-        select.value = '';
-      }
-    }
-
-    function getPrefillOptionFromUrl() {
-      const params = new URLSearchParams(window.location.search);
-      const option = (params.get('option') || '').trim();
-      return option;
-    }
-
-    function initSuspectSelect() {
-      const select = document.getElementById('suspectSelect');
-
-      suspectOptions.forEach(opt => {
-        const el = document.createElement('option');
-        el.value = opt.name;
-        el.textContent = opt.name;
-        select.appendChild(el);
+    function setup() {
+      const select = document.getElementById('who');
+      suspectOptions.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = opt.text = s.name;
+        select.appendChild(opt);
       });
 
-      const prefill = getPrefillOptionFromUrl();
+      const urlParams = new URLSearchParams(window.location.search);
+      const prefill = urlParams.get('option');
       if (prefill) {
         select.value = prefill;
         select.disabled = true;
-        setMessage('success', `Accusation recorded: ${prefill}. Add your evidence below.`);
+        document.getElementById('notice').innerText = "Voted for " + prefill + ". Now add your notes!";
       }
     }
 
-    function submitFeedback() {
-      const select = document.getElementById('suspectSelect');
-      const option = (select.value || '').trim();
-      const feedbackText = document.getElementById('feedbackTextarea').value.trim();
+    function sendNote() {
+      const who = document.getElementById('who').value;
+      const note = document.getElementById('note').value;
 
-      if (!feedbackText) {
-        setMessage('error', 'Please enter your feedback before submitting.');
+      if (!note) {
+        alert("Enter something first!");
         return;
       }
 
-      disableButtons(true);
-      setMessage('', '');
-
       db.ref('feedback/').push({
-        option: option || 'General',
-        feedback: feedbackText,
-        timestamp: firebase.database.ServerValue.TIMESTAMP
+        option: who,
+        feedback: note,
+        timestamp: Date.now()
       }).then(() => {
-        document.getElementById('feedbackTextarea').value = '';
-        setMessage('success', 'Thank you! Your feedback has been recorded.');
-        disableButtons(false);
-      }).catch(error => {
-        console.error('Feedback push failed:', error);
-        setMessage('error', 'Failed to submit feedback. Please try again.');
-        disableButtons(false);
+        alert("Sent!");
+        document.getElementById('note').value = '';
       });
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      initSuspectSelect();
-      document.getElementById('feedbackTextarea').focus();
-    });
-  </script>
+    function clearMe() {
+      document.getElementById('note').value = '';
+    }
 
+    window.onload = setup;
+  </script>
 </body>
 </html>

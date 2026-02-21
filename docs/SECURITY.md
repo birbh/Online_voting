@@ -3,7 +3,6 @@
 ## Admin credentials (keep confidential)
 
 - Badge ID: `2026`
-- Clear Key: `CLEAR2026`
 
 ## What this demo includes
 

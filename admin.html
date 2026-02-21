@@ -1,24 +1,9 @@
 <!DOCTYPE html>
-<!--
-  MIT License
-  
-  Copyright (c) 2026 Biraj Bhattarai
-  
-  Permission is hereby granted, free of charge, to any person obtaining a copy
-  of this software and associated documentation files (the "Software"), to deal
-  in the Software without restriction, including without limitation the rights
-  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-  copies of the Software, and to permit persons to whom the Software is
-  furnished to do so, subject to the following conditions:
-  
-  The above copyright notice and this permission notice shall be included in all
-  copies or substantial portions of the Software.
--->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Console - Live Analytics</title>
+  <title>Admin Area - Results</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,71 +11,51 @@
   <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
-  <!-- Authentication Overlay (Phase 2 - Primary Security) -->
-  <div id="authOverlay" class="auth-overlay">
-    <div class="auth-container">
-      <h1>Restricted Access</h1>
-      <p>Enter your clearance code to continue.</p>
-      <input 
-        id="badgeInput" 
-        type="password" 
-        class="badge-input" 
-        placeholder="● ● ● ●" 
-        onkeypress="handleBadgeKeypress(event)"
-      >
-      <button id="authButton" class="auth-button" onclick="authenticateBadge()">Authenticate</button>
-      <div id="authError" class="auth-error"></div>
+  <div id="loginPage" class="login-page">
+    <div class="login-box">
+      <h1>Admin Login</h1>
+      <p>Please enter the secret code.</p>
+      <input id="passCode" type="password" placeholder="Passcode here...">
+      <button onclick="checkPass()">Enter</button>
+      <div id="errorMsg" style="color: red; margin-top: 10px;"></div>
     </div>
   </div>
 
-  <!-- Main Dashboard (Hidden until authenticated) -->
-  <div id="dashboard" class="dashboard" style="display: none;">
-    <!-- Dashboard Header -->
-    <div class="dashboard-header">
-      <h1>Crime Scene Command Center</h1>
-      <p><span class="status"><span class="status-dot"></span>Live surveillance active</span></p>
+  <div id="mainContent" style="display: none;">
+    <div class="header-section">
+      <h1>The Evidence Board</h1>
+      <p>Total control over the investigation.</p>
     </div>
 
-    <!-- Analytics Panel with Chart.js -->
-    <div class="analytics-panel">
-      <h2>Suspect Accusation Analysis</h2>
-      <div class="stats-row" id="statsRow"></div>
-      <div class="chart-container">
-        <canvas id="voteChart"></canvas>
+    <div class="grid-layout">
+      <div class="left-side">
+        <div class="stats-box">
+          <h2>Current Standings</h2>
+          <div id="statsGrid"></div>
+          <div class="chart-wrapper">
+            <canvas id="myChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="right-side">
+        <div class="feed-box">
+          <h2>Latest Tips</h2>
+          <div id="evidenceList"></div>
+        </div>
       </div>
     </div>
 
-    <!-- Feedback Stream Panel -->
-    <div class="feedback-panel">
-      <h2>Witness Statements Log</h2>
-      <div id="feedbackStream" class="feedback-stream">
-        <div class="empty-state">Awaiting evidence submissions.</div>
-      </div>
-    </div>
-
-    <!-- Control Panel -->
-    <div class="control-panel">
-      <button class="control-button refresh-button" onclick="refreshData()">
-        Refresh Database
-      </button>
-      <button class="control-button reset-button" onclick="triggerSystemReset()">
-        Evidence Purge
-      </button>
+    <div class="bottom-actions">
+      <button class="reset-btn" onclick="clearAllData()">Reset Everything</button>
     </div>
   </div>
 
-  <!-- Firebase SDK (Compat SDK for Realtime Database) -->
-  <!-- Configuration block with clear comments -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
-  <!-- Shared Configuration -->
   <script src="js/config.js"></script>
 
   <script>
-    /* ===== FIREBASE CONFIGURATION ===== */
-    // Initialize Firebase with your project credentials
-    // Replace these values with your Firebase project configuration (same as index.html)
     const firebaseConfig = {
       apiKey: "AIzaSyC1bxz29svF9y_5V-8VJz0NaMsIzVOAwhI",
       authDomain: "online-voting-b970f.firebaseapp.com",
@@ -101,323 +66,87 @@
       appId: "1:784746686625:web:eb6a565d11d7240d48a8e0"
     };
 
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+    const database = firebase.database();
 
-    /* ===== AUTHENTICATION CREDENTIALS (Hashed) ===== */
-    // NOTE: Client-side authentication is NOT secure for production.
-    // For production, use Firebase Authentication + Security Rules.
-    // These are SHA-256 hashes for demo purposes.
-    const BADGE_HASH = "158a323a7ba44870f23d96f1516dd70aa48e9a72db4ebb026b0a89e212a208ab"; // SHA-256 of "2026"
-    const CLEAR_HASH = "441d5554947277937e54a89c2181ca51e8d3b09889cdf89a71e8c880f16af33b"; // SHA-256 of "CLEAR2026"
+    const SECRET_HASH = "158a323a7ba44870f23d96f1516dd70aa48e9a72db4ebb026b0a89e212a208ab";
 
-    let isAuthenticated = false;
-    let voteChart = null;
+    async function checkPass() {
+      const val = document.getElementById('passCode').value;
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(val));
+      const hash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
 
-    /* ===== SUSPECT OPTIONS (Loaded from config.js) ===== */
-    // suspectOptions is now imported from config.js
-
-    /* ===== SIMPLE SHA-256 HASH FUNCTION ===== */
-    async function hashString(str) {
-      const encoder = new TextEncoder();
-      const data = encoder.encode(str);
-      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    }
-
-    /* ===== AUTHENTICATION LOGIC ===== */
-    function handleBadgeKeypress(event) {
-      if (event.key === 'Enter') {
-        authenticateBadge();
+      if (hash === SECRET_HASH) {
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'block';
+        startDashboard();
+      } else {
+        document.getElementById('errorMsg').innerText = "Wrong code!";
       }
     }
 
-    async function authenticateBadge() {
-      const badgeInput = document.getElementById('badgeInput');
-      const authError = document.getElementById('authError');
-      const authButton = document.getElementById('authButton');
-      
-      if (!badgeInput || !authError || !authButton) {
-        console.error('Required elements not found');
-        return;
-      }
-      
-      const input = badgeInput.value.trim();
+    let chart = null;
 
-      if (!input) {
-        authError.innerHTML = 'Please enter a Badge ID.';
-        return;
-      }
-
-      // Disable button during hash computation
-      authButton.disabled = true;
-      authButton.textContent = 'VERIFYING...';
-
-      try {
-        const inputHash = await hashString(input);
-
-        if (inputHash === BADGE_HASH) {
-          isAuthenticated = true;
-          document.getElementById('authOverlay').classList.add('hidden');
-          document.getElementById('dashboard').style.display = 'grid';
-          badgeInput.value = '';
-          authError.innerHTML = '';
-          console.log('✓ Authentication successful');
-          initializeDashboard();
-        } else {
-          authError.innerHTML = 'Invalid Badge ID. Access denied.';
-          badgeInput.value = '';
-          authButton.disabled = false;
-          authButton.textContent = '🔓 AUTHENTICATE';
-          console.warn('✗ Authentication failed');
-        }
-      } catch (error) {
-        console.error('Authentication error:', error);
-        authError.innerHTML = 'Authentication failed. Please try again.';
-        authButton.disabled = false;
-        authButton.textContent = '🔓 AUTHENTICATE';
-      }
+    function startDashboard() {
+      initChart();
+      syncData();
+      syncTips();
     }
 
-    /* ===== INITIALIZE DASHBOARD ===== */
-    function initializeDashboard() {
-      console.log('📊 Initializing Admin Dashboard');
-      initializeChart();
-      loadVoteData();
-      subscribeToFeedback();
-    }
-
-    /* ===== INITIALIZE CHART.JS (Live Bar Chart) ===== */
-    function initializeChart() {
-      const ctx = document.getElementById('voteChart').getContext('2d');
-      
-      voteChart = new Chart(ctx, {
+    function initChart() {
+      const ctx = document.getElementById('myChart').getContext('2d');
+      chart = new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: suspectOptions.map(opt => opt.name),
+          labels: suspectOptions.map(s => s.name),
           datasets: [{
-            label: 'Accusations',
+            label: 'Votes',
             data: suspectOptions.map(() => 0),
-            backgroundColor: 'rgba(195, 90, 58, 0.35)',
-            borderColor: '#c35a3a',
-            borderWidth: 2,
-            borderRadius: 8,
-            hoverBackgroundColor: 'rgba(47, 111, 109, 0.35)',
-            hoverBorderColor: '#2f6f6d',
+            backgroundColor: '#c35a3a'
           }]
         },
         options: {
           responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: false
-            }
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                color: '#2b2e34',
-                font: {
-                  family: "'Space Grotesk', sans-serif",
-                  weight: '600'
-                }
-              },
-              grid: {
-                color: 'rgba(19, 20, 23, 0.08)'
-              }
-            },
-            x: {
-              ticks: {
-                color: '#2b2e34',
-                font: {
-                  size: 11,
-                  family: "'Space Grotesk', sans-serif",
-                  weight: '600'
-                }
-              },
-              grid: {
-                display: false
-              }
-            }
-          }
+          maintainAspectRatio: false
         }
       });
     }
 
-    /* ===== LOAD VOTE DATA (Real-time sync) ===== */
-    function loadVoteData() {
-      db.ref('votes/').on('value', snapshot => {
-        const voteData = snapshot.val() || {};
-        const votes = suspectOptions.map(opt => voteData[opt.id] || 0);
+    function syncData() {
+      database.ref('votes').on('value', snap => {
+        const data = snap.val() || {};
+        const counts = suspectOptions.map(s => data[s.id] || 0);
+        chart.data.datasets[0].data = counts;
+        chart.update();
 
-        // Update chart
-        voteChart.data.datasets[0].data = votes;
-        voteChart.update();
-
-        // Update stats
-        updateStats(votes);
-
-        console.log('📊 Accusation data updated:', voteData);
+        const total = counts.reduce((a, b) => a + b, 0);
+        document.getElementById('statsGrid').innerHTML = `
+          <div class="stat-item"><strong>${total}</strong> total votes</div>
+        `;
       });
     }
 
-    /* ===== UPDATE STATS CARDS ===== */
-    function updateStats(votes) {
-      const statsRow = document.getElementById('statsRow');
-
-      // Ensure all vote values are treated as safe numbers
-      const numericVotes = votes.map(v => {
-        const n = Number(v);
-        return Number.isFinite(n) && n >= 0 ? n : 0;
-      });
-      const totalVotes = numericVotes.reduce((sum, v) => sum + v, 0);
-      const topVotes = numericVotes.length ? Math.max(...numericVotes) : 0;
-
-      // Clear existing stats content
-      statsRow.innerHTML = '';
-
-      // Helper to create a stat card
-      function createStatCard(value, label) {
-        const card = document.createElement('div');
-        card.className = 'stat-card';
-
-        const valueDiv = document.createElement('div');
-        valueDiv.className = 'stat-value';
-        valueDiv.textContent = String(value);
-
-        const labelDiv = document.createElement('div');
-        labelDiv.className = 'stat-label';
-        labelDiv.textContent = label;
-
-        card.appendChild(valueDiv);
-        card.appendChild(labelDiv);
-        return card;
-      }
-
-      // Rebuild stats cards safely using textContent
-      statsRow.appendChild(createStatCard(totalVotes, 'Total Accusations'));
-      statsRow.appendChild(createStatCard(suspectOptions.length, 'Suspects'));
-      statsRow.appendChild(createStatCard(topVotes || 0, 'Top Suspect'));
-    }
-
-    /* ===== SUBSCRIBE TO FEEDBACK (.on('child_added')) ===== */
-    function subscribeToFeedback() {
-      const feedbackStream = document.getElementById('feedbackStream');
-      let isFirstLoad = true;
-
-      db.ref('feedback/').on('child_added', snapshot => {
-        const feedback = snapshot.val();
-        const feedbackId = snapshot.key;
-
-        // Clear empty state on first feedback
-        if (isFirstLoad) {
-          feedbackStream.innerHTML = '';
-          isFirstLoad = false;
-        }
-
-        // Format timestamp
-        const date = new Date(feedback.timestamp);
-        const timeStr = date.toLocaleTimeString();
-
-        // Create feedback item
-        const feedbackItem = document.createElement('div');
-        feedbackItem.className = 'feedback-item';
-
-        const optionDiv = document.createElement('div');
-        optionDiv.className = 'feedback-option';
-        optionDiv.textContent = ' SUSPECT: ' + (feedback.option ?? '');
-
-        const textDiv = document.createElement('div');
-        textDiv.className = 'feedback-text';
-        textDiv.textContent = '📝 EVIDENCE: "' + (feedback.feedback ?? '') + '"';
-
-        const timeDiv = document.createElement('div');
-        timeDiv.className = 'feedback-time';
-        timeDiv.textContent = timeStr;
-
-        feedbackItem.appendChild(optionDiv);
-        feedbackItem.appendChild(textDiv);
-        feedbackItem.appendChild(timeDiv);
-
-        // Prepend to stream (newest first)
-        feedbackStream.insertBefore(feedbackItem, feedbackStream.firstChild);
-
-        console.log('💬 New feedback received:', feedback);
+    function syncTips() {
+      database.ref('feedback').on('child_added', snap => {
+        const msg = snap.val();
+        const list = document.getElementById('evidenceList');
+        const div = document.createElement('div');
+        div.className = 'tip';
+        div.innerHTML = `<strong>${msg.option}:</strong> ${msg.feedback}`;
+        list.prepend(div);
       });
     }
 
-    /* ===== REFRESH DATA ===== */
-    function refreshData() {
-      console.log('🔄 Refreshing data...');
-      // The real-time listeners will automatically update
-      // This is a manual refresh trigger if needed
-    }
-
-    /* ===== SYSTEM RESET (Dual Authentication) ===== */
-    async function triggerSystemReset() {
-      if (!confirm('⚠️ WARNING: This will permanently delete all votes and feedback. Are you sure?')) {
-        return;
-      }
-
-      const clearKey = prompt('Enter the System Clear Key to confirm reset:');
-
-      if (clearKey === null || clearKey === '') {
-        return; // User cancelled or entered nothing
-      }
-
-      try {
-        const clearKeyHash = await hashString(clearKey.trim());
-        console.log('Clear key hash computed:', clearKeyHash);
-        console.log('Expected hash:', CLEAR_HASH);
-
-        if (clearKeyHash === CLEAR_HASH) {
-          performSystemReset();
-        } else {
-          alert('❌ Invalid Clear Key. System reset cancelled.');
-          console.warn('✗ Invalid clear key provided');
-        }
-      } catch (error) {
-        console.error('Error during reset authentication:', error);
-        alert('❌ System reset failed. Please try again.');
+    function clearAllData() {
+      if (confirm("Delete all data?")) {
+        database.ref('votes').remove().then(() => {
+          database.ref('feedback').remove().then(() => {
+            alert("Data cleared!");
+            location.reload();
+          });
+        });
       }
     }
-
-    /* ===== PERFORM SYSTEM RESET (db.ref().remove()) ===== */
-    function performSystemReset() {
-      console.log('🗑️ Performing system reset...');
-      
-      // Delete votes and feedback separately (not root, due to security rules)
-      Promise.all([
-        db.ref('votes').remove(),
-        db.ref('feedback').remove()
-      ]).then(() => {
-        alert('✓ System reset complete. All data purged.');
-        console.log('✓ All database entries removed');
-        
-        // Reset dashboard
-        if (voteChart) {
-          voteChart.data.datasets[0].data = suspectOptions.map(() => 0);
-          voteChart.update();
-        }
-        
-        document.getElementById('feedbackStream').innerHTML = '<div class="empty-state">Waiting for feedback...</div>';
-        updateStats(suspectOptions.map(() => 0));
-      }).catch(error => {
-        alert('❌ System reset failed. Please try again.');
-        console.error('Reset failed:', error);
-      });
-    }
-
-    /* ===== INITIALIZE ON PAGE LOAD ===== */
-    document.addEventListener('DOMContentLoaded', () => {
-      console.log('🔐 Admin HUD - Authentication Required');
-      document.getElementById('badgeInput').focus();
-    });
   </script>
-
 </body>
 </html>

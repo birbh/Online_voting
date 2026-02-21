@@ -1,33 +1,30 @@
-/* ===== SHARED SUSPECT DATA ===== */
-// This file contains the suspect options used across all pages
-
 const suspectOptions = [
   {
-    id: 'suspect1',
+    id: 's1',
     name: 'Lydia Mercer',
-    role: 'First Year Student',
-    motive: 'age 23 - Campus access & knowledge',
+    role: '1st Year',
+    motive: '23 yrs old - knows the campus well',
     photoUrl: 'images/lydia.jpg'
   },
   {
-    id: 'suspect2',
+    id: 's2',
     name: 'Marco Vale',
-    role: 'Final Year Student',
-    motive: 'age 27 - Academic pressure & secrets',
+    role: 'Final Year',
+    motive: '27 yrs old - lots of pressure to finish',
     photoUrl: 'images/marco.jpg'
   },
   {
-    id: 'suspect3',
+    id: 's3',
     name: 'Noah Kade',
     role: 'Lab Assistant',
-    motive: 'age 32 - Lab access & expertise',
+    motive: '32 yrs old - knows his way around the lab',
     photoUrl: 'images/noah.jpg'
   },
   {
-    id: 'suspect4',
+    id: 's4',
     name: 'Theo Ash',
-    role: 'Third Year Student',
-    motive: 'age 25 - Hidden connections',
+    role: '3rd Year',
+    motive: '25 yrs old - has some weird friends',
     photoUrl: 'images/theo.jpg'
   }
 ];

@@ -1,167 +1,98 @@
 <!DOCTYPE html>
-<!--
-  MIT License
-  
-  Copyright (c) 2026 Biraj Bhattarai
-  
-  Permission is hereby granted, free of charge, to any person obtaining a copy
-  of this software and associated documentation files (the "Software"), to deal
-  in the Software without restriction, including without limitation the rights
-  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-  copies of the Software, and to permit persons to whom the Software is
-  furnished to do so, subject to the following conditions:
-  
-  The above copyright notice and this permission notice shall be included in all
-  copies or substantial portions of the Software.
--->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crime Scene Vote - Live Accusations</title>
+  <title>Who Did It? - Crime Scene Vote</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
-  <div class="container">
-    <!-- Header Section -->
-    <div class="header">
-      <h1>Crime Scene Vote</h1>
-      <p class="header-tagline">Who did it? Review the notes and make your call.</p>
-      <p class="header-note">One vote per device. Add evidence after you vote.</p>
-      <div class="header-actions">
-        <a class="header-link" href="feedback.html">Submit Evidence</a>
-        <a class="header-link" href="admin.html">Admin Console</a>
+  <div class="main-container">
+    <div class="top-bar">
+      <h1>The Crime Scene</h1>
+      <p>Someone's guilty. Look at the files and make your choice.</p>
+      <div class="nav-links">
+        <a href="feedback.html">Add Evidence</a>
+        <a href="admin.html">View Results</a>
       </div>
     </div>
 
-    <!-- Voting Section (Phase 1 - Primary) -->
-    <div id="votingSection" class="voting-section">
-      <div id="errorMessage"></div>
-      <div id="votingGrid" class="voting-grid">
-        <!-- Voting cards will be dynamically inserted here -->
-      </div>
-    </div>
+    <div id="votingGrid"></div>
+    <div id="errorBox"></div>
 
     <footer class="footer">
-      <span>Case files update in real time. Keep your feedback concise.</span>
+      <p>Real-time updates. No cheating.</p>
     </footer>
   </div>
 
-  <!-- Firebase SDK (Compat SDK for Realtime Database) -->
-  <!-- Configuration block with clear comments -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
-  <!-- Shared Configuration -->
   <script src="js/config.js"></script>
 
   <script>
-    /* ===== FIREBASE CONFIGURATION ===== */
-    // Initialize Firebase with your project credentials
-    // Replace these values with your Firebase project configuration
     const firebaseConfig = {
-  apiKey: "AIzaSyC1bxz29svF9y_5V-8VJz0NaMsIzVOAwhI",
-  authDomain: "online-voting-b970f.firebaseapp.com",
-  databaseURL: "https://online-voting-b970f-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "online-voting-b970f",
-  storageBucket: "online-voting-b970f.firebasestorage.app",
-  messagingSenderId: "784746686625",
-  appId: "1:784746686625:web:eb6a565d11d7240d48a8e0"
-};
-    
+      apiKey: "AIzaSyC1bxz29svF9y_5V-8VJz0NaMsIzVOAwhI",
+      authDomain: "online-voting-b970f.firebaseapp.com",
+      databaseURL: "https://online-voting-b970f-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "online-voting-b970f",
+      storageBucket: "online-voting-b970f.firebasestorage.app",
+      messagingSenderId: "784746686625",
+      appId: "1:784746686625:web:eb6a565d11d7240d48a8e0"
+    };
 
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+    const database = firebase.database();
 
-    /* ===== SUSPECT DATA (Loaded from config.js) ===== */
-    // suspectOptions is now imported from config.js
+    let done = false;
 
-    let hasVoted = false;
-    let currentVote = null;
-
-    /* ===== INITIALIZE VOTING GRID ===== */
-    function initializeVotingGrid() {
+    function renderSuspects() {
       const grid = document.getElementById('votingGrid');
-      grid.innerHTML = ''; // Clear previous content
+      grid.innerHTML = '';
 
-      suspectOptions.forEach(suspect => {
-        const card = document.createElement('div');
-        card.className = 'voting-card';
-        card.innerHTML = `
-          <div class="suspect-photo">
-            <img src="${suspect.photoUrl}" alt="${suspect.name}" onerror="this.style.display='none'">
+      suspectOptions.forEach(s => {
+        const div = document.createElement('div');
+        div.className = 'person-card';
+        div.innerHTML = `
+          <div class="profile-pic">
+            <img src="${s.photoUrl}" alt="${s.name}" onerror="this.src='https://via.placeholder.com/200'">
           </div>
-          <div class="suspect-info">
-            <div>
-              <h3>${suspect.name}</h3>
-              <p><strong>Role:</strong> ${suspect.role}</p>
-              <p><strong>Motive:</strong> ${suspect.motive}</p>
-            </div>
-            <button class="vote-button" onclick="castVote('${suspect.id}', '${suspect.name}')">
-              Accuse
-            </button>
+          <div class="info">
+            <h3>${s.name}</h3>
+            <p><strong>Job:</strong> ${s.role}</p>
+            <p>${s.motive}</p>
+            <button class="btn-vote" onclick="vote('${s.id}', '${s.name}')">Pick This One</button>
           </div>
         `;
-        grid.appendChild(card);
+        grid.appendChild(div);
       });
     }
 
-    /* ===== CAST VOTE (Firebase Transaction for Atomicity) ===== */
-    function castVote(optionId, optionTitle) {
-      if (hasVoted) {
-        showError('You have already voted. Use “Submit Evidence” to leave feedback.');
+    function vote(id, name) {
+      if (done) {
+        alert("You already picked someone!");
         return;
       }
 
-      // Disable all buttons during transaction
-      disableAllButtons();
+      const buttons = document.querySelectorAll('.btn-vote');
+      buttons.forEach(b => b.disabled = true);
 
-      // Use Firebase transaction to ensure atomicity during high-traffic voting
-      db.ref('votes/' + optionId).transaction(currentValue => {
-        return (currentValue || 0) + 1;
-      }).then(result => {
-        if (result.committed) {
-          hasVoted = true;
-          currentVote = optionTitle;
-          console.log(`✓ Vote recorded for: ${optionTitle}`);
-          window.location.href = `feedback.html?option=${encodeURIComponent(optionTitle)}`;
+      database.ref('votes/' + id).transaction(val => {
+        return (val || 0) + 1;
+      }).then(res => {
+        if (res.committed) {
+          done = true;
+          window.location.href = 'feedback.html?option=' + encodeURIComponent(name);
         }
-      }).catch(error => {
-        enableAllButtons();
-        showError('Failed to cast vote. Please try again.');
-        console.error('Transaction failed:', error);
+      }).catch(err => {
+        buttons.forEach(b => b.disabled = false);
+        console.error(err);
       });
     }
 
-    function showError(message) {
-      const errorDiv = document.getElementById('errorMessage');
-      errorDiv.innerHTML = `<div class="error-message">${message}</div>`;
-      setTimeout(() => {
-        errorDiv.innerHTML = '';
-      }, 5000);
-    }
-
-    function disableAllButtons() {
-      document.querySelectorAll('.vote-button').forEach(btn => {
-        btn.disabled = true;
-      });
-    }
-
-    function enableAllButtons() {
-      document.querySelectorAll('.vote-button').forEach(btn => {
-        btn.disabled = false;
-      });
-    }
-
-    /* ===== INITIALIZE ON PAGE LOAD ===== */
-    document.addEventListener('DOMContentLoaded', () => {
-      console.log('🔍 Digital Investigator - Participant Portal Initialized');
-      initializeVotingGrid();
-    });
+    window.onload = renderSuspects;
   </script>
 </body>
 </html>
