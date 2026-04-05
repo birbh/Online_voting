@@ -42,6 +42,20 @@ body {
   cursor: pointer;
 }
 
+.security-link-wrap {
+  margin-top: 12px;
+}
+
+.security-link {
+  color: #2b4b7f;
+  text-decoration: underline;
+  font-size: 14px;
+}
+
+.security-link:hover {
+  color: #1d3459;
+}
+
 .header-section {
   margin-bottom: 30px;
 }

@@ -5,6 +5,7 @@ This is a live voting thing for when you want people to guess who the criminal i
 ## Project integration:
 This project is integrated with the fingerprint biometric hardware system which can be accessed in:
 [Fingerprint automation](https://github.com/birbh/Fingerprint_automation)
+[Demo](https://birbh.github.io/Online_voting/index.html)
 
 ## How it works
 
