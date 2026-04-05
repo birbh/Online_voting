@@ -2,6 +2,10 @@
 
 This is a live voting thing for when you want people to guess who the criminal is. People vote on suspects and can leave notes. Admins get to see the results live on a chart.
 
+## Project integration:
+This project is integrated with the fingerprint biometric hardware system which can be accessed in:
+[Fingerprint automation](https://github.com/birbh/Fingerprint_automation)
+
 ## How it works
 
 1. **Voting**: Go to index.html and pick someone.
